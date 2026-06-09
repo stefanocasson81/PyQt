@@ -1,44 +1,49 @@
-[   
-   {
-      "isin": "IE00B84J9L26",
-      "desc":"Pim Income Eur Hdg",
-      "qta": 761.457,
-      "investment": 10500.00
-   },
-   {
-      "isin": "LU0503631987",
-      "desc": "Pict Global Environmental opportunities",
-      "qta": 35.282,
-      "investment": 10000.00
-   },
-   {
-      "isin": "LU0329202252",
-      "desc": "JPI Global Dividend Fund",
-      "qta": 15.579,
-      "investment":3800
-   },
-   {
-      "isin": "LU0115773425",
-      "desc": "Fid Global Technology eur",
-      "qta": 54.15,
-      "investment":2500
-   },
-   {
-      "isin": "LU0594300096",
-      "desc": "Fid China Consumer fund",
-      "qta": 249.94,
-      "investment":7000
-   },
-   {
-      "isin": "LU0119620416",
-      "desc": "MS Global Brands",
-      "qta": 69.202,
-      "investment":13000
-   },
-   {
-      "isin": "LU0073234253",
-      "desc": "M Euro Staretgic Bond",
-      "qta": 143.07,
-      "investment":7000
-   }
-]
+{
+	"fondi":[
+		{
+			"isin": "IE00B84J9L26",
+			"desc":"Pim Income Eur Hdg",
+			"qta": 761.457,
+			"investment": 10500.0
+		},
+		{
+			"isin": "LU0503631987",
+			"desc": " Pict Global Environmental opportunities",
+			"qta": 35.282,
+			"investment": 10000.0
+		},
+		{
+			"isin": "LU0329202252",
+			"desc": "JPI Global Dividend Fund",
+			"qta": 15.579,
+			"investment":3800.0
+		},
+		{
+			"isin": "LU0115773425",
+			"desc": "Fid Global Technology eur",
+			"qta": 54.15,
+			"investment":2500.0
+		},
+		{
+			"isin": "LU0594300096",
+			"Desc": "Fid China Consumer fund",
+			"qta": 249.94,
+			"investment":7000.0
+		},
+		{
+			"isin": "LU0119620416",
+			"Desc": "MS Global Brands",
+			"qta": 69.202,
+			"investment":13000.0
+		},
+				{
+			"isin": "LU0073234253",
+			"Desc": "M Euro Staretgic Bond",
+			"qta": 143.07,
+			"investment":7000.0
+		}
+	]
+}
+		
+		
+		

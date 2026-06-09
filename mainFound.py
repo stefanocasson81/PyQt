@@ -22,7 +22,11 @@ class FondiModel(QAbstractTableModel):
     def __init__(self,json_data=None):
         #super(FondiModel,self).__init__()
         super().__init__()
-        self._json_data = json_data or {}
+        #self._json_data = json_data or {}
+        self._json_data =  json_data["fondi"]
+        self._columns = list(self._json_data[0].keys())
+
+
 
     # def rowCount(self, parent=QModelIndex()):
     #     return len(self._json_data)
@@ -33,30 +37,38 @@ class FondiModel(QAbstractTableModel):
         return len(self._json_data)
 
     def columnCount(self, parent=None):
-        return len(self._json_data[0])
+        #return len(self._json_data[0])
+        return len(self._columns)
 
     def data(self,index,role=Qt.ItemDataRole.DisplayRole):
+        if not index.isValid():
+            return None
         if role == Qt.ItemDataRole.DisplayRole:
             row = index.row()
             #col = index.column()
             #col_name = self._columns[0]
             column_key = index.column()
+            key= self._columns[column_key]
+            value = self._json_data[row].get(key)
+
+
             #return str(self._json_data[row][col_name])
             # row = self._json_data[index.row()]
             # column_key = self._json_data[index.column()]
             # return self._json_data[index.row()][index.column()]
-            if isinstance(self._json_data[row][column_key],float):
-             return "%.2f" % (row.get(column_key))
+            if isinstance(value,float):
+             return "%.2f" % value
             #
-            if isinstance(self._json_data[row][column_key],str):
-             return str(row.get(column_key, ""))
+            if isinstance(value,str):
+             return str(value)
+            return None
 
         return None
 
-    # def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
-    #     if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
-    #         return str(self._headers[section]).capitalize()
-    #     return super().headerData(section, orientation, role)
+    def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
+        if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
+            return str(self._columns[section]).capitalize()
+        return super().headerData(section, orientation, role)
 
 class MainWindow(QMainWindow):
     def __init__(self):

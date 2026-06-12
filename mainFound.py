@@ -99,7 +99,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         # exitAction.setShortcut('Ctrl+Q')
         # exitAction.setStatusTip('Esci dall\'applicazione')
         self.actionExit.triggered.connect(self.close) # Connessione del segnale
-
+        self.addButton.pressed.connect(self.add)
         # Azione Nuovo
         # newAction = QAction('&Nuovo', self)
         # newAction.triggered.connect(self.nuova_azione)
@@ -135,7 +135,9 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         with open(datafile, "w") as f:
             json.dump(self.model.todos, f)
 
-    #def add(self):
+    def add(self):
+        text = self.lineEdit.text()
+
 
 
 if __name__ == "__main__":

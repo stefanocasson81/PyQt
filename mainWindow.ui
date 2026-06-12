@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1297</width>
-    <height>795</height>
+    <width>1301</width>
+    <height>803</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,7 +25,32 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="lineEdit"/>
+     <widget class="QLineEdit" name="lineEdit_isin">
+      <property name="text">
+       <string>isin</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="lineEdit_desc">
+      <property name="text">
+       <string>desc</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="lineEdit_qta">
+      <property name="text">
+       <string>qta</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="lineEdit_inv">
+      <property name="text">
+       <string>inv€</string>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QPushButton" name="addButton">
@@ -41,7 +66,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1297</width>
+     <width>1301</width>
      <height>33</height>
     </rect>
    </property>

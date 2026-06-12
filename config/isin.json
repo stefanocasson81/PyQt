@@ -26,19 +26,19 @@
 		},
 		{
 			"isin": "LU0594300096",
-			"Desc": "Fid China Consumer fund",
+			"desc": "Fid China Consumer fund",
 			"qta": 249.94,
 			"investment":7000.0
 		},
 		{
 			"isin": "LU0119620416",
-			"Desc": "MS Global Brands",
+			"desc": "MS Global Brands",
 			"qta": 69.202,
 			"investment":13000.0
 		},
 				{
 			"isin": "LU0073234253",
-			"Desc": "M Euro Staretgic Bond",
+			"desc": "M Euro Staretgic Bond",
 			"qta": 143.07,
 			"investment":7000.0
 		}

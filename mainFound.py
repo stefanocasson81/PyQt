@@ -5,10 +5,11 @@ import requests
 import sys
 #from control.control import Control
 #from curses.ascii import controlnames
-# from mainWindow_ui import Ui_MainWindow
+from mainWindow import Ui_MainWindow
 from PyQt6 import QtCore,QtWidgets
 from PyQt6.QtCore import Qt,QAbstractTableModel, QModelIndex
 from PyQt6.QtGui import QImage
+from PyQt6.QtGui import QColor,QAction,QIcon
 from PyQt6.QtWidgets import QApplication, QTableView, QMainWindow, QVBoxLayout, QWidget
 
 basedir = os.path.dirname(__file__)
@@ -62,31 +63,57 @@ class FondiModel(QAbstractTableModel):
             if isinstance(value,str):
              return str(value)
             return None
+        if (role == Qt.ItemDataRole.BackgroundRole and index.column() == 2):
+            return QColor(Qt.GlobalColor.blue)
 
-        return None
 
     def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
         if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
             return str(self._columns[section]).capitalize()
         return super().headerData(section, orientation, role)
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow,Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        # self.setupUi(self)
-        headers=["isin","desc","qta","investment"]
+        self.setupUi(self)
+        self.show()
         self.setWindowTitle("Tabella Fondi")
-        self.resize(800,600)
-        self.table = QTableView()
+        # self.resize(800,600)
+        # self.table = QTableView()
         data = self.load()
         self.model = FondiModel(data)
-        self.table.setModel(self.model)
-        layout = QVBoxLayout()
-        layout.addWidget(self.table)
+        self.tableView.setModel(self.model)
+        # layout = QVBoxLayout()
+        # layout.addWidget(self.table)
 
-        container=QWidget()
-        container.setLayout(layout)
-        self.setCentralWidget(container)
+        # 1. Creazione della Menu Bar
+        # menubar = self.menuBar()
+
+        # 2. Aggiunta dei menu (File, Modifica)
+        # fileMenu = menubar.addMenu('&File')
+        # editMenu = menubar.addMenu('&Modifica')
+
+        # 3. Creazione delle azioni (Action)
+        # Azione Esci
+        # exitAction = QAction(QIcon('exit.png'), '&Esci', self)
+        # exitAction.setShortcut('Ctrl+Q')
+        # exitAction.setStatusTip('Esci dall\'applicazione')
+        self.actionExit.triggered.connect(self.close) # Connessione del segnale
+
+        # Azione Nuovo
+        # newAction = QAction('&Nuovo', self)
+        # newAction.triggered.connect(self.nuova_azione)
+
+        # 4. Aggiunta delle azioni ai menu
+        # fileMenu.addAction(newAction)
+        # fileMenu.addSeparator() # Aggiunge una linea divisoria
+        # fileMenu.addAction(exitAction)
+
+        # self.statusBar() # Abilita la barra di stato per lo statusTip
+
+        # container=QWidget()
+        # container.setLayout(layout)
+        # self.setCentralWidget(container)
 
     def load(self):
         try:
@@ -107,6 +134,9 @@ class MainWindow(QMainWindow):
     def save(self):
         with open(datafile, "w") as f:
             json.dump(self.model.todos, f)
+
+    #def add(self):
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

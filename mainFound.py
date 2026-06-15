@@ -17,7 +17,8 @@ basedir = os.path.dirname(__file__)
 tick = QImage(os.path.join(basedir, "tick.png"))
 datafile = os.path.join(basedir,"config", "isin.json")
 
-
+#riga di commando per convertire file ui in file py
+#pyuic6 mainwindow.ui -o MainWindow.py
 
 class FondiModel(QAbstractTableModel):
     def __init__(self,json_data=None):
@@ -71,6 +72,11 @@ class FondiModel(QAbstractTableModel):
         if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
             return str(self._columns[section]).capitalize()
         return super().headerData(section, orientation, role)
+
+    def add_element(self,nuovo):
+        self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount())
+        self._json_data.append(nuovo)
+        self.endInsertRows()
 
 class MainWindow(QMainWindow,Ui_MainWindow):
     def __init__(self):
@@ -136,8 +142,13 @@ class MainWindow(QMainWindow,Ui_MainWindow):
             json.dump(self.model.todos, f)
 
     def add(self):
-        text = self.lineEdit.text()
+        text = self.lineEdit_isin.text()
+        new = {"isn" :"LU0000000","desc":"ciao merda","qta":10,"investment":100}
+        self.model.add_element(new)
 
+        # for i in range(self.model.rowCount()):
+        #     print("isn")
+        print(self.model._json_data)
 
 
 if __name__ == "__main__":

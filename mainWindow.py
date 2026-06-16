@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'mainWindow.ui'
+# Form implementation generated from reading ui file 'mainwindow.ui'
 #
 # Created by: PyQt6 UI code generator 6.11.0
 #
@@ -40,6 +40,9 @@ class Ui_MainWindow(object):
         self.addButton = QtWidgets.QPushButton(parent=self.centralwidget)
         self.addButton.setObjectName("addButton")
         self.verticalLayout.addWidget(self.addButton)
+        self.saveButton = QtWidgets.QPushButton(parent=self.centralwidget)
+        self.saveButton.setObjectName("saveButton")
+        self.verticalLayout.addWidget(self.saveButton)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1301, 33))
@@ -77,6 +80,7 @@ class Ui_MainWindow(object):
         self.lineEdit_qta.setText(_translate("MainWindow", "qta"))
         self.lineEdit_inv.setText(_translate("MainWindow", "inv€"))
         self.addButton.setText(_translate("MainWindow", "Add Todo"))
+        self.saveButton.setText(_translate("MainWindow", "PushButton"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuModifica.setTitle(_translate("MainWindow", "Modifica"))
         self.actionExit.setText(_translate("MainWindow", "Exit"))

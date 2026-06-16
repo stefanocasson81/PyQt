@@ -10,7 +10,7 @@ from PyQt6 import QtCore,QtWidgets
 from PyQt6.QtCore import Qt,QAbstractTableModel, QModelIndex
 from PyQt6.QtGui import QImage
 from PyQt6.QtGui import QColor,QAction,QIcon
-from PyQt6.QtWidgets import QApplication, QTableView, QMainWindow, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QApplication, QTableView, QMainWindow, QVBoxLayout, QWidget, QAbstractItemView, QTableWidget
 
 basedir = os.path.dirname(__file__)
 
@@ -78,6 +78,14 @@ class FondiModel(QAbstractTableModel):
         self._json_data.append(nuovo)
         self.endInsertRows()
 
+    def setData(self,index,value,role):
+        if role == Qt.ItemDataRole.EditRole:
+            self._json_data[index.row()][index.column()] = value
+            self.dataChanged.emit(index, index)
+            return True
+        return False
+
+
 class MainWindow(QMainWindow,Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -89,6 +97,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         data = self.load()
         self.model = FondiModel(data)
         self.tableView.setModel(self.model)
+        self.tableView.setEditTriggers(QTableView.selectAll())
         # layout = QVBoxLayout()
         # layout.addWidget(self.table)
 
@@ -106,6 +115,8 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         # exitAction.setStatusTip('Esci dall\'applicazione')
         self.actionExit.triggered.connect(self.close) # Connessione del segnale
         self.addButton.pressed.connect(self.add)
+        self.saveButton.pressed.connect(self.save)
+        v
         # Azione Nuovo
         # newAction = QAction('&Nuovo', self)
         # newAction.triggered.connect(self.nuova_azione)
@@ -138,17 +149,16 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
 
     def save(self):
-        with open(datafile, "w") as f:
-            json.dump(self.model.todos, f)
+        with open(datafile, "w",encoding="utf-8") as f:
+            json.dump(self.model._json_data, f)
 
     def add(self):
-        text = self.lineEdit_isin.text()
-        new = {"isn" :"LU0000000","desc":"ciao merda","qta":10,"investment":100}
+        text_isin = self.lineEdit_isin.text()
+        text_desc = self.lineEdit_desc.text()
+        float_qta = float(self.lineEdit_qta.text())
+        float_inv = float(self.lineEdit_inv.text())
+        new = {"isin" :text_isin,"desc":text_desc,"qta":float_qta,"investment":float_inv}
         self.model.add_element(new)
-
-        # for i in range(self.model.rowCount()):
-        #     print("isn")
-        print(self.model._json_data)
 
 
 if __name__ == "__main__":

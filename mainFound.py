@@ -25,7 +25,7 @@ class FondiModel(QAbstractTableModel):
         #super(FondiModel,self).__init__()
         super().__init__()
         #self._json_data = json_data or {}
-        self._json_data =  json_data["fondi"]
+        self._json_data =  json_data or {}
         self._columns = list(self._json_data[0].keys())
 
 
@@ -47,8 +47,6 @@ class FondiModel(QAbstractTableModel):
             return None
         if role == Qt.ItemDataRole.DisplayRole:
             row = index.row()
-            #col = index.column()
-            #col_name = self._columns[0]
             column_key = index.column()
             key= self._columns[column_key]
             value = self._json_data[row].get(key)
@@ -92,12 +90,11 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.setupUi(self)
         self.show()
         self.setWindowTitle("Tabella Fondi")
-        # self.resize(800,600)
-        # self.table = QTableView()
         data = self.load()
         self.model = FondiModel(data)
         self.tableView.setModel(self.model)
-        self.tableView.setEditTriggers(QTableView.selectAll())
+        self.tableView.setEditTriggers(QAbstractItemView.doubleClicked)
+
         # layout = QVBoxLayout()
         # layout.addWidget(self.table)
 
@@ -116,7 +113,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.actionExit.triggered.connect(self.close) # Connessione del segnale
         self.addButton.pressed.connect(self.add)
         self.saveButton.pressed.connect(self.save)
-        v
+
         # Azione Nuovo
         # newAction = QAction('&Nuovo', self)
         # newAction.triggered.connect(self.nuova_azione)
@@ -150,7 +147,9 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
     def save(self):
         with open(datafile, "w",encoding="utf-8") as f:
-            json.dump(self.model._json_data, f)
+            # Fondi= {"Fondi": self.model._json_data}
+            string_data=json.dump(self.model._json_data, f,indent=4, ensure_ascii=False)
+            print(string_data)
 
     def add(self):
         text_isin = self.lineEdit_isin.text()

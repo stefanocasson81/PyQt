@@ -27,8 +27,12 @@ class FondiModel(QAbstractTableModel):
         #self._json_data = json_data or {}
         self._json_data =  json_data or {}
         self._columns = list(self._json_data[0].keys())
+        self.url = 'https://www.boursorama.com/bourse/opcvm/cours/'
 
-
+        self.name_list = []
+        self.price_list = []
+        self.date_list = []
+        self.guadagno = 0.0
 
     # def rowCount(self, parent=QModelIndex()):
     #     return len(self._json_data)
@@ -48,8 +52,35 @@ class FondiModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.DisplayRole:
             row = index.row()
             column_key = index.column()
-            key= self._columns[column_key]
+            key = self._columns[column_key]
             value = self._json_data[row].get(key)
+            if key == "isin":
+                res = requests.get(self.url+ value, headers={'User-Agent': 'Mozilla/5.0'})
+                # Checking for Bad download
+                try:
+                    res.raise_for_status()
+                except Exception as exc:
+                    print("There was a problem: %s" % (exc))
+
+                    # making soup
+                soup_res = bs4.BeautifulSoup(res.text, 'html.parser')
+                try:
+                    # if sys.argv[-2] =='-ft':
+                    #     name = soup_res.find('h1', {'class':'mod-tearsheet-overview__header__name mod-tearsheet-overview__header__name--large'})
+                    #     price = soup_res.find('span',{'class':'mod-ui-data-list__value'})
+                    #     name_list.append(name.text)
+                    #     price_list.append(price.text.replace(',', ''))
+                    # else:
+                    name = soup_res.find('a', {'class': 'c-faceplate__company-link'})
+                    price = soup_res.find('span', {'class': 'c-instrument c-instrument--last'})
+                    self.name_list.append(name.text.strip())
+                    self.price_list.append(''.join(price.text.split()))
+                    self.f_Price = float(price.text.replace(",", "."))
+                    prezzoAttuale = (float)(data["fondi"][i]["qta"]) * self.f_Price
+                    self.guadagno += prezzoAttuale - (float)(data["fondi"][i]["investment"])
+                except:
+                    self.name_list.append('NA')
+                    self.price_list.append('NA')
 
 
             #return str(self._json_data[row][col_name])
@@ -83,6 +114,14 @@ class FondiModel(QAbstractTableModel):
             return True
         return False
 
+    def flags(self, index):
+        return (
+                Qt.ItemFlag.ItemIsSelectable
+                | Qt.ItemFlag.ItemIsEnabled
+                | Qt.ItemFlag.ItemIsEditable
+        )
+
+
 
 class MainWindow(QMainWindow,Ui_MainWindow):
     def __init__(self):
@@ -93,7 +132,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         data = self.load()
         self.model = FondiModel(data)
         self.tableView.setModel(self.model)
-        self.tableView.setEditTriggers(QAbstractItemView.doubleClicked)
+        # self.tableView.setEditTriggers(QAbstractItemView.doubleClicked(index.row))
 
         # layout = QVBoxLayout()
         # layout.addWidget(self.table)

@@ -33,6 +33,8 @@ class FondiModel(QAbstractTableModel):
         self.price_list = []
         self.date_list = []
         self.guadagno = 0.0
+        self.somma = 0
+        self.f_Price = 0
 
     # def rowCount(self, parent=QModelIndex()):
     #     return len(self._json_data)
@@ -51,10 +53,12 @@ class FondiModel(QAbstractTableModel):
             return None
         if role == Qt.ItemDataRole.DisplayRole:
             row = index.row()
+            #self.riga = row
             column_key = index.column()
             key = self._columns[column_key]
             value = self._json_data[row].get(key)
             if key == "isin":
+                self.riga = row
                 res = requests.get(self.url+ value, headers={'User-Agent': 'Mozilla/5.0'})
                 # Checking for Bad download
                 try:
@@ -76,23 +80,27 @@ class FondiModel(QAbstractTableModel):
                     self.name_list.append(name.text.strip())
                     self.price_list.append(''.join(price.text.split()))
                     self.f_Price = float(price.text.replace(",", "."))
-                    prezzoAttuale = (float)(data["fondi"][i]["qta"]) * self.f_Price
-                    self.guadagno += prezzoAttuale - (float)(data["fondi"][i]["investment"])
+                    #prezzoAttuale = (float)(data["fondi"][i]["qta"]) * self.f_Price
+                    #self.guadagno += prezzoAttuale - (float)(data["fondi"][i]["investment"])
                 except:
                     self.name_list.append('NA')
                     self.price_list.append('NA')
 
+            if key == "qta" and self.riga == row:
+                self.somma += (value * self.f_Price)
 
-            #return str(self._json_data[row][col_name])
-            # row = self._json_data[index.row()]
-            # column_key = self._json_data[index.column()]
-            # return self._json_data[index.row()][index.column()]
-            if isinstance(value,float):
-             return "%.2f" % value
-            #
-            if isinstance(value,str):
-             return str(value)
+
+            if isinstance(value, float):
+                return "%.2f" % value
+                #
+            if isinstance(value, str):
+                return str(value)
+
             return None
+
+
+
+
         if (role == Qt.ItemDataRole.BackgroundRole and index.column() == 2):
             return QColor(Qt.GlobalColor.blue)
 

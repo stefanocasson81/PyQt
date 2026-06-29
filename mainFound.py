@@ -44,72 +44,38 @@ class FondiModel(QAbstractTableModel):
         return len(self._json_data)
 
     def columnCount(self, parent=None):
-        #return len(self._json_data[0])
         return len(self._columns)
 
-    def insertColumns(self,columns):
-        self.beginInsertColumns(QModelIndex(), self.columnCount(), self.columnCount())
-        self._json_data.append(nuovo)
-        self.endInsertRows()
+    # def insertColumns(self,columns):
+    #     self.beginInsertColumns(QModelIndex(), self.columnCount(), self.columnCount())
+    #     self._json_data.append(f"{"Somma"}")
+    #     self.endInsertColumns()
 
-    def data(self,index,role=Qt.ItemDataRole.DisplayRole):
+    def addColumn(self, name, default=None):
+        if name in self._columns:
+            return
+        pos = self.columnCount()
+        self.beginInsertColumns(QModelIndex(), pos, pos)
+        self._columns.append(name)
+        for row in self._json_data:
+            row[name] = default
+        self.endInsertColumns()
+
+    def data(self, index, role=Qt.ItemDataRole.DisplayRole):
         if not index.isValid():
             return None
+
         if role == Qt.ItemDataRole.DisplayRole:
-            row = index.row()
-            column_key = index.column()
-            if column_key == 5:
-                 value = self.somma
-                 return f"{"Somma"}"
-            else:
-                key = self._columns[column_key]
-                value = self._json_data[row].get(key)
+            key = self._columns[index.column()]
+            value = self._json_data[index.row()].get(key)
 
-                if key == "isin":
-                    self.riga = row
-                    '''
-                    res = requests.get(self.url + value, headers={'User-Agent': 'Mozilla/5.0'})
-                    # Checking for Bad download
-                    try:
-                       res.raise_for_status()
-                    except Exception as exc:
-                       print("There was a problem: %s" % (exc))
-    
-                        # making soup
-                    soup_res = bs4.BeautifulSoup(res.text, 'html.parser')
-                    try:
-                        # if sys.argv[-2] =='-ft':
-                        #     name = soup_res.find('h1', {'class':'mod-tearsheet-overview__header__name mod-tearsheet-overview__header__name--large'})
-                        #     price = soup_res.find('span',{'class':'mod-ui-data-list__value'})
-                        #     name_list.append(name.text)
-                        #     price_list.append(price.text.replace(',', ''))
-                        # else:
-                        name = soup_res.find('a', {'class': 'c-faceplate__company-link'})
-                        price = soup_res.find('span', {'class': 'c-instrument c-instrument--last'})
-                        self.name_list.append(name.text.strip())
-                        self.price_list.append(''.join(price.text.split()))
-                        self.f_Price = float(price.text.replace(",", "."))
-                        #prezzoAttuale = (float)(data["fondi"][i]["qta"]) * self.f_Price
-                        #self.guadagno += prezzoAttuale - (float)(data["fondi"][i]["investment"])
-                    except:
-                        self.name_list.append('NA')
-                        self.price_list.append('NA')
-                    '''
-                    self.f_Price = float(14.4)
+            if isinstance(value, float):
+                return f"{value:.2f}"
 
-                if key == "qta" and self.riga == row:
-                    self.somma += (value * self.f_Price)
+            return value
 
-                if isinstance(value, float):
-                    return "%.2f" % value
+        return None
 
-                if isinstance(value, str):
-                    return str(value)
-
-                return None
-
-        if (role == Qt.ItemDataRole.BackgroundRole and index.column() == 2):
-            return QColor(Qt.GlobalColor.blue)
 
 
     def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
@@ -124,10 +90,27 @@ class FondiModel(QAbstractTableModel):
 
     def setData(self,index,value,role):
         if role == Qt.ItemDataRole.EditRole:
-            self._json_data[index.row()][index.column()] = value
+            key = self._columns[index.column()]
+            self._json_data[index.row()][key] = value
             self.dataChanged.emit(index, index)
             return True
         return False
+
+    # def setData(self, row, column_name, value):
+    #     self._json_data[row][column_name] = value
+    #     column = self._columns.index(column_name)
+    #     index = self.index(row, column)
+    #     self.dataChanged.emit(index, index)
+
+    def setColumn(self, name, values):
+        if len(values) != self.rowCount():
+            return
+        column = self._columns.index(name)
+        for row, value in enumerate(values):
+            self._json_data[row][name] = value
+        top = self.index(0, column)
+        bottom = self.index(self.rowCount() - 1, column)
+        self.dataChanged.emit(top, bottom)
 
     def flags(self, index):
         return (
@@ -147,6 +130,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         data = self.load()
         self.model = FondiModel(data)
         self.tableView.setModel(self.model)
+        self.model.addColumn("Somma", 0.0)
         # self.tableView.setEditTriggers(QAbstractItemView.doubleClicked(index.row))
 
         # layout = QVBoxLayout()

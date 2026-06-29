@@ -1,0 +1,239 @@
+Sì. Ti propongo una struttura che segue il pattern **Model + Worker**, che è quello normalmente usato con Qt.
+
+## Struttura del progetto
+
+```text
+main.py
+│
+├── fondi_model.py
+├── fondi_worker.py
+└── mainwindow.py
+```
+
+## 1. Il model contiene solo i dati
+
+```python
+class FondiModel(QAbstractTableModel):
+
+    def __init__(self, data=None):
+        super().__init__()
+
+        self._json_data = data or []
+        self._columns = list(self._json_data[0].keys()) if self._json_data else []
+```
+
+Il `data()` diventa semplicissimo:
+
+```python
+def data(self, index, role=Qt.DisplayRole):
+
+    if not index.isValid():
+        return None
+
+    if role == Qt.DisplayRole:
+
+        key = self._columns[index.column()]
+        return self._json_data[index.row()].get(key)
+
+    return None
+```
+
+Niente richieste HTTP.
+
+---
+
+## 2. Metodo per aggiungere una colonna
+
+```python
+def addColumn(self, name, default=None):
+
+    if name in self._columns:
+        return
+
+    pos = self.columnCount()
+
+    self.beginInsertColumns(QModelIndex(), pos, pos)
+
+    self._columns.append(name)
+
+    for row in self._json_data:
+        row[name] = default
+
+    self.endInsertColumns()
+```
+
+Puoi fare
+
+```python
+model.addColumn("Prezzo")
+model.addColumn("Nome")
+model.addColumn("Guadagno")
+```
+
+---
+
+## 3. Metodo per modificare una cella
+
+```python
+def setValue(self, row, field, value):
+
+    self._json_data[row][field] = value
+
+    column = self._columns.index(field)
+
+    index = self.index(row, column)
+
+    self.dataChanged.emit(index, index)
+```
+
+---
+
+## 4. Il Worker
+
+Qui metti tutto quello che adesso è nel tuo `data()`.
+
+```python
+class FondiWorker(QObject):
+
+    finished = Signal()
+    updated = Signal(int, dict)
+
+    def aggiorna(self, fondi):
+
+        for row, fondo in enumerate(fondi):
+
+            dati = scarica_dati(fondo["isin"])
+
+            self.updated.emit(row, dati)
+
+        self.finished.emit()
+```
+
+dove
+
+```python
+scarica_dati()
+```
+
+è la funzione che contiene il tuo
+
+```python
+requests.get(...)
+BeautifulSoup(...)
+```
+
+---
+
+## 5. Collegamento al Model
+
+```python
+worker.updated.connect(self.aggiornaRiga)
+```
+
+e nel model:
+
+```python
+def aggiornaRiga(self, row, dati):
+
+    for campo, valore in dati.items():
+
+        self._json_data[row][campo] = valore
+
+    left = self.index(row, 0)
+    right = self.index(row, self.columnCount()-1)
+
+    self.dataChanged.emit(left, right)
+```
+
+---
+
+## 6. La funzione che scarica i dati
+
+Prendi il codice che adesso hai dentro `data()`:
+
+```python
+res = requests.get(...)
+soup = BeautifulSoup(...)
+```
+
+e lo metti qui:
+
+```python
+def scarica_dati(isin):
+
+    url = "https://www.boursorama.com/bourse/opcvm/cours/" + isin
+
+    res = requests.get(url, headers={'User-Agent':'Mozilla/5.0'})
+
+    soup = BeautifulSoup(res.text,"html.parser")
+
+    nome = ...
+    prezzo = ...
+
+    return {
+        "Nome": nome,
+        "Prezzo": prezzo
+    }
+```
+
+---
+
+## 7. Il vantaggio
+
+Adesso la tua `QTableView` non farà più 500 richieste HTTP.
+
+Succederà questo:
+
+```
+Apertura finestra
+        │
+        ▼
+Il model mostra i dati del JSON
+        │
+        ▼
+Parte il Worker
+        │
+        ▼
+Scarica il fondo 1
+        │
+        ▼
+Aggiorna solo la riga 1
+        │
+        ▼
+Scarica il fondo 2
+        │
+        ▼
+Aggiorna solo la riga 2
+        │
+        ▼
+...
+```
+
+La tabella si aggiorna progressivamente e l'interfaccia rimane reattiva.
+
+---
+
+### Un'altra osservazione importante
+
+Nel codice che hai mostrato c'è anche questo:
+
+```python
+self.riga = row
+...
+if key == "qta" and self.riga == row:
+    self.somma += (value * self.f_Price)
+```
+
+Questo è problematico perché `data()` **non viene chiamato in ordine prevedibile**. Qt può richiedere prima la colonna 5, poi la 1, poi la 3, poi di nuovo la 5. Fare calcoli con variabili di stato come `self.riga`, `self.somma` o `self.f_Price` all'interno di `data()` può produrre risultati errati o incoerenti.
+
+Ti consiglierei di calcolare `"Somma"` direttamente quando ricevi il prezzo dal worker:
+
+```python
+prezzo = dati["Prezzo"]
+qta = self._json_data[row]["qta"]
+
+self.setValue(row, "Prezzo", prezzo)
+self.setValue(row, "Somma", qta * prezzo)
+```
+
+In questo modo `data()` si limita a restituire i valori già calcolati, che è il comportamento previsto da un `QAbstractTableModel`.

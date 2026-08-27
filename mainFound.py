@@ -131,7 +131,7 @@ class FondiModel(QAbstractTableModel):
 
 ###################worker######################
 
-class WorkerSignals(QObject):
+# class WorkerSignals(QObject):
     """Signals from a running worker thread.
 
     finished
@@ -147,10 +147,10 @@ class WorkerSignals(QObject):
         tuple (thread_id, progress_value)
     """
 
-    finished = pyqtSignal(int)  # thread_id
-    error = pyqtSignal(tuple)
-    result = pyqtSignal(object)
-    progress = pyqtSignal(tuple)  # (thread_id, progress_value)
+    # finished = pyqtSignal(int)  # thread_id
+    # error = pyqtSignal(tuple)
+    # result = pyqtSignal(object)
+    # progress = pyqtSignal(tuple)  # (thread_id, progress_value)
 
 class Worker(QRunnable):
     """Worker thread.
@@ -163,29 +163,32 @@ class Worker(QRunnable):
     :param args: Arguments to pass to the callback function
     :param kwargs: Keywords to pass to the callback function
     """
-    def __init__(self, fn, *args, **kwargs):
+    # def __init__(self, fn, *args, **kwargs):
+    def init(self):
         super().__init__()
-        self.fn = fn
-        self.args = args
-        self.kwargs = kwargs
-        self.signals = WorkerSignals()
-        self.thread_id = kwargs.get("thread_id", 0)
-        # Add the callback to our kwargs
-        self.kwargs["progress_callback"] = self.signals.progress
+        # self.fn = fn
+        # self.args = args
+        # self.kwargs = kwargs
+        # # self.signals = WorkerSignals()
+        # self.thread_id = kwargs.get("thread_id", 0)
+        # # Add the callback to our kwargs
+        # self.kwargs["progress_callback"] = self.signals.progress
 
     @pyqtSlot()
     def run(self):
-        try:
-            result = self.fn(*self.args, **self.kwargs)
-        except Exception:
-            traceback.print_exc()
-            exctype, value = sys.exc_info()[:2]
-            self.signals.error.emit((exctype, value, traceback.format_exc()))
-        else:
-            self.signals.result.emit(result)
-        finally:
-            self.signals.finished.emit(self.thread_id)
-
+        # try:
+        #     result = self.fn(*self.args, **self.kwargs)
+        # except Exception:
+        #     traceback.print_exc()
+        #     exctype, value = sys.exc_info()[:2]
+        #     self.signals.error.emit((exctype, value, traceback.format_exc()))
+        # else:
+        #     self.signals.result.emit(result)
+        # finally:
+        #     self.signals.finished.emit(self.thread_id)
+        print("Thread start")
+        # time.sleep(0.5)
+        print("Thread complete")
 ###############main windows#####################################################
 
 
@@ -199,8 +202,10 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.model = FondiModel(data)
         self.tableView.setModel(self.model)
         self.model.addColumn("Somma", 0.0)
+        self.threadpool = QThreadPool()
         # self.tableView.setEditTriggers(QAbstractItemView.doubleClicked(index.row))
-
+        worker = Worker()
+        self.threadpool.start(worker.run)
 
 
         # layout = QVBoxLayout()
@@ -239,7 +244,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
         self.timer = QTimer()
         self.timer.setInterval(1000)
-        self.timer.timeout.connect(self.recurring_timer)
+        #self.timer.timeout.connect(self.recurring_timer)
         self.timer.start()
         self.threadpool = QThreadPool()
         thread_count = self.threadpool.maxThreadCount()
@@ -348,15 +353,15 @@ class MainWindow(QMainWindow,Ui_MainWindow):
             # else:
             name = soup_res.find('a', {'class': 'c-faceplate__company-link'})
             price = soup_res.find('span', {'class': 'c-instrument c-instrument--last'})
-            name_list.append(name.text.strip())
-            price_list.append(''.join(price.text.split()))
-            f_Price = float(price.text.replace(",", "."))
-            prezzoAttuale = (float)(data["fondi"][i]["qta"]) * f_Price
-            guadagno += prezzoAttuale - (float)(data["fondi"][i]["investment"])
+            self.model.name_list.append(name.text.strip())
+            self.model.price_list.append(''.join(price.text.split()))
+            self.model.f_Price = float(price.text.replace(",", "."))
+            self.model.prezzoAttuale = (float)(data["fondi"][i]["qta"]) * f_Price
+            self.model.guadagno += prezzoAttuale - (float)(data["fondi"][i]["investment"])
         except:
-            name_list.append('NA')
-            price_list.append('NA')
-            continue
+            self.model.name_list.append('NA')
+            self.model.price_list.append('NA')
+
 
 
 if __name__ == "__main__":

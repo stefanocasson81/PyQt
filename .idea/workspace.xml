@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9bda5b79-00bc-488d-baba-8e1f20dcb149" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/multithread.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/GetFoundsQT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/GetFoundsQT.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
@@ -45,6 +44,7 @@
     "Python.getFunds.executor": "Run",
     "Python.main.executor": "Run",
     "Python.mainFound.executor": "Run",
+    "Python.mainFound_2.executor": "Run",
     "Python.mainWindow.executor": "Run",
     "Python.multithread.executor": "Run",
     "Python.template.executor": "Run",
@@ -53,7 +53,8 @@
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/Usr/Software/Python/PyQt"
+    "last_opened_file_path": "D:/Usr/Software/Python/PyQt",
+    "settings.editor.selected.configurable": "preferences.keymap"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -64,7 +65,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-1bde30d8e611-7b97d883f26b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.25557.130" />
+        <option value="bundled-python-sdk-7e47963ff851-f0eec537fc84-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.23892.515" />
       </set>
     </attachedChunks>
   </component>
@@ -99,17 +100,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>224</line>
-          <option name="timeStamp" value="60" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>125</line>
-          <option name="timeStamp" value="72" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>78</line>
+          <line>87</line>
           <option name="timeStamp" value="73" />
         </line-breakpoint>
       </breakpoints>

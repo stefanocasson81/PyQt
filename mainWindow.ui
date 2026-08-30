@@ -60,9 +60,19 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="saveButton">
+     <widget class="QPushButton" name="updateButton">
       <property name="text">
-       <string>PushButton</string>
+       <string>Update</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="lineEdit_status"/>
+    </item>
+    <item>
+     <widget class="QProgressBar" name="progressBar">
+      <property name="value">
+       <number>24</number>
       </property>
      </widget>
     </item>

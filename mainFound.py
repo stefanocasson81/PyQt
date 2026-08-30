@@ -12,7 +12,7 @@ from PyQt6.QtCore import Qt,QAbstractTableModel, QModelIndex
 from PyQt6.QtGui import QImage
 from PyQt6.QtGui import QColor,QAction,QIcon
 from PyQt6.QtWidgets import QApplication, QTableView, QMainWindow, QVBoxLayout, QWidget, QAbstractItemView, QTableWidget
-from PyQt6.QtCore import QRunnable, QThreadPool, QTimer, pyqtSlot
+from PyQt6.QtCore import QRunnable,QObject, QThreadPool, QTimer, pyqtSlot,pyqtSignal
 
 basedir = os.path.dirname(__file__)
 
@@ -105,6 +105,18 @@ class FondiModel(QAbstractTableModel):
             return True
         return False
 
+    def aggiornaRiga(self,row,dati):
+        # for row in self._json_data:
+        #     row[name] = default
+        for row, valore in dati.items():
+            self._json_data[row][campo] = valore
+
+        left = self.index(row, 0)
+        right = self.index(row, self.columnCount() - 1)
+
+        self.dataChanged.emit(left, right)
+
+
     # def setData(self, row, column_name, value):
     #     self._json_data[row][column_name] = value
     #     column = self._columns.index(column_name)
@@ -131,7 +143,7 @@ class FondiModel(QAbstractTableModel):
 
 ###################worker######################
 
-# class WorkerSignals(QObject):
+class WorkerSignals(QObject):
     """Signals from a running worker thread.
 
     finished
@@ -147,7 +159,10 @@ class FondiModel(QAbstractTableModel):
         tuple (thread_id, progress_value)
     """
 
-    # finished = pyqtSignal(int)  # thread_id
+    finished = pyqtSignal()  # thread_id
+    error = pyqtSignal(tuple)
+    progress = pyqtSignal(int)
+    # result = pyqtSignal()
     # error = pyqtSignal(tuple)
     # result = pyqtSignal(object)
     # progress = pyqtSignal(tuple)  # (thread_id, progress_value)
@@ -163,33 +178,29 @@ class Worker(QRunnable):
     :param args: Arguments to pass to the callback function
     :param kwargs: Keywords to pass to the callback function
     """
-    # def __init__(self, fn, *args, **kwargs):
-    def init(self):
+    def __init__(self,fn, *args, **kwargs):
+    # def init(self):
         super().__init__()
-        # self.fn = fn
-        # self.args = args
-        # self.kwargs = kwargs
-        # # self.signals = WorkerSignals()
+        self.fn = fn
+        self.args = args
+        self.kwargs = kwargs
+        self.signals = WorkerSignals()
+
         # self.thread_id = kwargs.get("thread_id", 0)
         # # Add the callback to our kwargs
-        # self.kwargs["progress_callback"] = self.signals.progress
+        self.kwargs["progress_callback"] = self.signals.progress
 
     @pyqtSlot()
     def run(self):
-        # try:
-        #     result = self.fn(*self.args, **self.kwargs)
-        # except Exception:
-        #     traceback.print_exc()
-        #     exctype, value = sys.exc_info()[:2]
-        #     self.signals.error.emit((exctype, value, traceback.format_exc()))
-        # else:
-        #     self.signals.result.emit(result)
-        # finally:
-        #     self.signals.finished.emit(self.thread_id)
-        print("Thread start")
-        # time.sleep(0.5)
-        print("Thread complete")
-###############main windows#####################################################
+
+        try:
+            self.fn(*self.args,**self.kwargs)
+        except Exception:
+            exctype, value = sys.exc_info()[:2]
+            self.signals.error.emit((exctype, value, traceback.format_exc()))
+        else:
+            self.signals.finished.emit()
+
 
 
 class MainWindow(QMainWindow,Ui_MainWindow):
@@ -198,16 +209,22 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.setupUi(self)
         self.show()
         self.setWindowTitle("Tabella Fondi")
-        data = self.load()
-        self.model = FondiModel(data)
+        self.data = self.load()
+        self.model = FondiModel(self.data)
         self.tableView.setModel(self.model)
         self.model.addColumn("Somma", 0.0)
+        self.updateButton.clicked.connect(self.execute)
         self.threadpool = QThreadPool()
+        thread_count = self.threadpool.maxThreadCount()
+        print(f"Multithreading with maximum {thread_count} threads")
         # self.tableView.setEditTriggers(QAbstractItemView.doubleClicked(index.row))
-        worker = Worker()
-        self.threadpool.start(worker.run)
 
+        # worker.updated.connect(self.model.aggiornaRiga,)
+        # worker.signals.result.connect(self.print_output)
 
+        # worker.signals.progress.connect(self.on_progress)
+
+        # worker.signals.progress.connect(self.progress_fn)
         # layout = QVBoxLayout()
         # layout.addWidget(self.table)
 
@@ -225,7 +242,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         # exitAction.setStatusTip('Esci dall\'applicazione')
         self.actionExit.triggered.connect(self.close) # Connessione del segnale
         self.addButton.pressed.connect(self.add)
-        self.saveButton.pressed.connect(self.save)
+        # self.saveButton.pressed.connect(self.save)
 
         # Azione Nuovo
         # newAction = QAction('&Nuovo', self)
@@ -246,9 +263,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.timer.setInterval(1000)
         #self.timer.timeout.connect(self.recurring_timer)
         self.timer.start()
-        self.threadpool = QThreadPool()
-        thread_count = self.threadpool.maxThreadCount()
-        print(f"Multithreading with maximum {thread_count} threads")
+
 
     def load(self):
         try:
@@ -281,59 +296,41 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.model.add_element(new)
 
 
-    def start_worker(self):
-        worker = Worker()
+    def execute(self):
+        worker = Worker(self.aggiornaDati,self.data)
+        # worker.signals.finished.connect(self.model.aggiornaRiga)
+        # worker.signals.result.connect(self.on_result)
+        worker.signals.error.connect(self.on_error)
+        worker.signals.finished.connect(self.on_finished)
+        worker.signals.progress.connect(self.updateProgress)
         self.threadpool.start(worker)
 
 
-    def progress_fn(self, data):
-        thread_id, n = data
-        print(f"THREAD #{thread_id}: {n:.1f}% done")
+    def updateProgress(self,progress):
+        self.progressBar.setValue(progress)
+
+    def on_error(self):
+        exctype, value, tb = error_tuple
+        print("Errore:", value)
+        print(tb)
+
+    def on_finished(self):
+        self.lineEdit_status.setText("Completato")
 
 
-    def print_output(self, s):
-        print(s)
+    # def recurring_timer(self):
+    #     self.counter += 1
+    #     self.label.setText(f"Counter: {self.counter}")
 
-    def thread_complete(self, thread_id):
-        print(f"THREAD #{thread_id} COMPLETE!")
+    def aggiornaDati(self, data,progress_callback=None):
+        for row, fondo in enumerate(data):
+            self.scarica_dati(fondo["isin"])
+            totale=len(data)
+            if progress_callback:
+                progress=int((row+1)*100/totale)
+                progress_callback.emit(progress)
 
-    def oh_no(self):
-        # Pass the function to execute
-        self.thread_id += 1
-        worker = Worker(
-            self.execute_this_fn, thread_id=self.thread_id
-        )  # Any other args, kwargs are passed to the run function
-        worker.signals.result.connect(self.print_output)
-        worker.signals.finished.connect(self.thread_complete)
-        worker.signals.progress.connect(self.progress_fn)
-        # Execute
-        self.threadpool.start(worker)
-
-    def recurring_timer(self):
-        self.counter += 1
-        self.label.setText(f"Counter: {self.counter}")
-
-    def execute_this_fn(self, progress_callback, thread_id):
-        for n in range(0, 5):
-            time.sleep(1)
-            progress = n * 100 / 4
-            progress_callback.emit((thread_id, progress))
-        return "Done."
-
-    def recurring_timer(self):
-        self.counter += 1
-        self.label.setText(f"Counter: {self.counter}")
-
-    def aggiornaDati(self,fondi):
-        for row, fondo in enumerate(fondi):
-            dati = scarica_dati(fondo["isin"])
-
-            self.updated.emit(row, dati)
-
-        self.finished.emit()
-
-    def scarica_dati(self,isin):
-
+    def scarica_dati(self, isin):
         url = "https://www.boursorama.com/bourse/opcvm/cours/" + isin
         res = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
         # Checking for Bad download
@@ -356,11 +353,16 @@ class MainWindow(QMainWindow,Ui_MainWindow):
             self.model.name_list.append(name.text.strip())
             self.model.price_list.append(''.join(price.text.split()))
             self.model.f_Price = float(price.text.replace(",", "."))
-            self.model.prezzoAttuale = (float)(data["fondi"][i]["qta"]) * f_Price
-            self.model.guadagno += prezzoAttuale - (float)(data["fondi"][i]["investment"])
+            # self.model.prezzoAttuale = (float)(data["fondi"][i]["qta"]) * f_Price
+            # self.model.guadagno += prezzoAttuale - (float)(data["fondi"][i]["investment"])
+            # return  self.model.prezzoAttuale
         except:
             self.model.name_list.append('NA')
             self.model.price_list.append('NA')
+
+
+##############main windows#####################################################
+
 
 
 

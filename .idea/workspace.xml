@@ -6,11 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="9bda5b79-00bc-488d-baba-8e1f20dcb149" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/isin.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/isin.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mainFound.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainFound.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mainFound_2.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainFound_2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mainWindow.ui" beforeDir="false" afterPath="$PROJECT_DIR$/mainWindow.ui" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,9 +42,10 @@
     "Python._colorize.executor": "Run",
     "Python.getFunds.executor": "Run",
     "Python.main.executor": "Run",
-    "Python.mainFound.executor": "Debug",
+    "Python.mainFound.executor": "Run",
     "Python.mainFound_2.executor": "Run",
     "Python.mainWindow.executor": "Run",
+    "Python.model.executor": "Run",
     "Python.multithread.executor": "Run",
     "Python.template.executor": "Run",
     "Python.traceback.executor": "Run",
@@ -104,27 +101,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>201</line>
-          <option name="timeStamp" value="106" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>317</line>
+          <line>146</line>
           <option name="timeStamp" value="107" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>198</line>
-          <option name="timeStamp" value="112" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>196</line>
-          <option name="timeStamp" value="113" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>329</line>
+          <line>158</line>
           <option name="timeStamp" value="114" />
         </line-breakpoint>
       </breakpoints>

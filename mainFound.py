@@ -3,14 +3,18 @@ import os
 import bs4
 import requests
 import sys
+from model import FondiModel
+from worker import *
+
+
 import time
 #from control.control import Control
 #from curses.ascii import controlnames
 from mainWindow import Ui_MainWindow
 from PyQt6 import QtCore,QtWidgets
 from PyQt6.QtCore import Qt,QAbstractTableModel, QModelIndex
-from PyQt6.QtGui import QImage
-from PyQt6.QtGui import QColor,QAction,QIcon
+# from PyQt6.QtGui import QImage
+# from PyQt6.QtGui import QColor,QAction,QIcon
 from PyQt6.QtWidgets import QApplication, QTableView, QMainWindow, QVBoxLayout, QWidget, QAbstractItemView, QTableWidget
 from PyQt6.QtCore import QRunnable,QObject, QThreadPool, QTimer, pyqtSlot,pyqtSignal
 
@@ -23,183 +27,9 @@ datafile = os.path.join(basedir,"config", "isin.json")
 #pyuic6 mainwindow.ui -o MainWindow.py
 
 
-########################################model##################################
-
-
-class FondiModel(QAbstractTableModel):
-    def __init__(self,json_data=None):
-        #super(FondiModel,self).__init__()
-        super().__init__()
-        self._json_data =  json_data or {}
-        self._columns = list(self._json_data[0].keys())
-        self.url = 'https://www.boursorama.com/bourse/opcvm/cours/'
-
-        self.name_list = []
-        self.price_list = []
-        self.date_list = []
-        self.guadagno = 0.0
-        self.somma = 0
-        self.f_Price = 0
-
-    # def rowCount(self, parent=QModelIndex()):
-    #     return len(self._json_data)
-    #
-    # def columnCount(self, parent=QModelIndex()):
-    #     return len(self._headers)
-    def rowCount(self, parent=None):
-        return len(self._json_data)
-
-    def columnCount(self, parent=None):
-        return len(self._columns)
-
-    # def insertColumns(self,columns):
-    #     self.beginInsertColumns(QModelIndex(), self.columnCount(), self.columnCount())
-    #     self._json_data.append(f"{"Somma"}")
-    #     self.endInsertColumns()
-
-    def addColumn(self, name, default=None):
-        if name in self._columns:
-            return
-        pos = self.columnCount()
-        self.beginInsertColumns(QModelIndex(), pos, pos)
-        self._columns.append(name)
-        for row in self._json_data:
-            row[name] = default
-        self.endInsertColumns()
-
-    def data(self, index, role=Qt.ItemDataRole.DisplayRole):
-        if not index.isValid():
-            return None
-
-        if role == Qt.ItemDataRole.DisplayRole:
-            key = self._columns[index.column()]
-            value = self._json_data[index.row()].get(key)
-
-            if isinstance(value, float):
-                return f"{value:.2f}"
-
-            if isinstance(value, str):
-                return str(value)
-
-            return value
-
-        return None
 
 
 
-    def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
-        if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
-            return str(self._columns[section]).capitalize()
-        return super().headerData(section, orientation, role)
-
-    def add_element(self,nuovo):
-        self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount())
-        self._json_data.append(nuovo)
-        self.endInsertRows()
-
-    def setData(self,index,value,role):
-        if role == Qt.ItemDataRole.EditRole:
-            key = self._columns[index.column()]
-            self._json_data[index.row()][key] = value
-            self.dataChanged.emit(index, index)
-            return True
-        return False
-
-    def aggiornaRiga(self,row,dati):
-        # for row in self._json_data:
-        #     row[name] = default
-        for row, valore in dati.items():
-            self._json_data[row][campo] = valore
-
-        left = self.index(row, 0)
-        right = self.index(row, self.columnCount() - 1)
-
-        self.dataChanged.emit(left, right)
-
-
-    # def setData(self, row, column_name, value):
-    #     self._json_data[row][column_name] = value
-    #     column = self._columns.index(column_name)
-    #     index = self.index(row, column)
-    #     self.dataChanged.emit(index, index)
-
-    def setColumn(self, name, values):
-        if len(values) != self.rowCount():
-            return
-        column = self._columns.index(name)
-        for row, value in enumerate(values):
-            self._json_data[row][name] = value
-        top = self.index(0, column)
-        bottom = self.index(self.rowCount() - 1, column)
-        self.dataChanged.emit(top, bottom)
-
-    def flags(self, index):
-        return (
-                Qt.ItemFlag.ItemIsSelectable
-                | Qt.ItemFlag.ItemIsEnabled
-                | Qt.ItemFlag.ItemIsEditable
-        )
-
-
-###################worker######################
-
-class WorkerSignals(QObject):
-    """Signals from a running worker thread.
-
-    finished
-        int thread_id
-
-    error
-        tuple (exctype, value, traceback.format_exc())
-
-    result
-        object data returned from processing, anything
-
-    progress
-        tuple (thread_id, progress_value)
-    """
-
-    finished = pyqtSignal()  # thread_id
-    error = pyqtSignal(tuple)
-    progress = pyqtSignal(int)
-    # result = pyqtSignal()
-    # error = pyqtSignal(tuple)
-    # result = pyqtSignal(object)
-    # progress = pyqtSignal(tuple)  # (thread_id, progress_value)
-
-class Worker(QRunnable):
-    """Worker thread.
-
-    Inherits from QRunnable to handler worker thread setup, signals and wrap-up.
-
-    :param callback: The function callback to run on this worker thread.
-                     Supplied args and kwargs will be passed through to the runner.
-    :type callback: function
-    :param args: Arguments to pass to the callback function
-    :param kwargs: Keywords to pass to the callback function
-    """
-    def __init__(self,fn, *args, **kwargs):
-    # def init(self):
-        super().__init__()
-        self.fn = fn
-        self.args = args
-        self.kwargs = kwargs
-        self.signals = WorkerSignals()
-
-        # self.thread_id = kwargs.get("thread_id", 0)
-        # # Add the callback to our kwargs
-        self.kwargs["progress_callback"] = self.signals.progress
-
-    @pyqtSlot()
-    def run(self):
-
-        try:
-            self.fn(*self.args,**self.kwargs)
-        except Exception:
-            exctype, value = sys.exc_info()[:2]
-            self.signals.error.emit((exctype, value, traceback.format_exc()))
-        else:
-            self.signals.finished.emit()
 
 
 

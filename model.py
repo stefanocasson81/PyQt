@@ -85,10 +85,26 @@ class FondiModel(QAbstractTableModel):
             return True
         return False
 
+    def setValue(self, isn, column_name, value):
+        row = 0
+        for campo in self._json_data:
+            if campo["isin"] in isn:
+                # if not (0 <= row < self.rowCount()):
+                #     return False
+                if column_name not in self._columns:
+                    return False
+                col = self._columns.index(column_name)
+                self._json_data[row][column_name] = value
+                index = self.index(row, col)
+                self.dataChanged.emit(index, index)
+                return True
+            row = row + 1
+
+
     def aggiornaRiga(self,row,dati):
         # for row in self._json_data:
         #     row[name] = default
-        for row, valore in dati.items():
+        for campo, valore in dati.items():
             self._json_data[row][campo] = valore
 
         left = self.index(row, 0)

@@ -1,5 +1,7 @@
 import json
 import os
+from email.policy import default
+
 import bs4
 import requests
 import sys
@@ -13,7 +15,7 @@ import time
 from mainWindow import Ui_MainWindow
 from PyQt6 import QtCore,QtWidgets
 from PyQt6.QtCore import Qt,QAbstractTableModel, QModelIndex
-# from PyQt6.QtGui import QImage
+from PyQt6.QtGui import QImage
 # from PyQt6.QtGui import QColor,QAction,QIcon
 from PyQt6.QtWidgets import QApplication, QTableView, QMainWindow, QVBoxLayout, QWidget, QAbstractItemView, QTableWidget
 from PyQt6.QtCore import QRunnable,QObject, QThreadPool, QTimer, pyqtSlot,pyqtSignal
@@ -42,8 +44,10 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.data = self.load()
         self.model = FondiModel(self.data)
         self.tableView.setModel(self.model)
+        self.model.addColumn("Totale", 0.0)
         self.model.addColumn("Somma", 0.0)
         self.updateButton.clicked.connect(self.execute)
+        self.progressBar.setValue(0)
         self.threadpool = QThreadPool()
         thread_count = self.threadpool.maxThreadCount()
         print(f"Multithreading with maximum {thread_count} threads")
@@ -183,6 +187,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
             self.model.name_list.append(name.text.strip())
             self.model.price_list.append(''.join(price.text.split()))
             self.model.f_Price = float(price.text.replace(",", "."))
+            self.model.setValue(isin,"Totale",self.model.f_Price)
             # self.model.prezzoAttuale = (float)(data["fondi"][i]["qta"]) * f_Price
             # self.model.guadagno += prezzoAttuale - (float)(data["fondi"][i]["investment"])
             # return  self.model.prezzoAttuale
@@ -192,7 +197,6 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
 
 ##############main windows#####################################################
-
 
 
 

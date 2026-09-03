@@ -28,13 +28,6 @@ datafile = os.path.join(basedir,"config", "isin.json")
 #riga di commando per convertire file ui in file py
 #pyuic6 mainwindow.ui -o MainWindow.py
 
-
-
-
-
-
-
-
 class MainWindow(QMainWindow,Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -44,8 +37,8 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.data = self.load()
         self.model = FondiModel(self.data)
         self.tableView.setModel(self.model)
-        self.model.addColumn("Totale", 0.0)
-        self.model.addColumn("Somma", 0.0)
+        self.model.addColumn("PrezzoSingolo", 0.0)
+        self.model.addColumn("Guadagno", 0.0)
         self.updateButton.clicked.connect(self.execute)
         self.progressBar.setValue(0)
         self.threadpool = QThreadPool()
@@ -159,7 +152,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
     def aggiornaDati(self, data,progress_callback=None):
         for row, fondo in enumerate(data):
             self.scarica_dati(fondo["isin"])
-            totale=len(data)
+            totale = len(data)
             if progress_callback:
                 progress=int((row+1)*100/totale)
                 progress_callback.emit(progress)
@@ -187,7 +180,9 @@ class MainWindow(QMainWindow,Ui_MainWindow):
             self.model.name_list.append(name.text.strip())
             self.model.price_list.append(''.join(price.text.split()))
             self.model.f_Price = float(price.text.replace(",", "."))
-            self.model.setValue(isin,"Totale",self.model.f_Price)
+            self.model.setValue(isin,"PrezzoSingolo",self.model.f_Price)
+            self.gdn = self.model.getValue(isin,"qta")
+            self.model.setValue(isin, "Guadagno", self.gdn*self.model.f_Price)
             # self.model.prezzoAttuale = (float)(data["fondi"][i]["qta"]) * f_Price
             # self.model.guadagno += prezzoAttuale - (float)(data["fondi"][i]["investment"])
             # return  self.model.prezzoAttuale

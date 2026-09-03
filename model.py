@@ -20,6 +20,7 @@ class FondiModel(QAbstractTableModel):
         self.guadagno = 0.0
         self.somma = 0
         self.f_Price = 0
+        self.quota = 0
 
     # def rowCount(self, parent=QModelIndex()):
     #     return len(self._json_data)
@@ -50,7 +51,6 @@ class FondiModel(QAbstractTableModel):
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
         if not index.isValid():
             return None
-
         if role == Qt.ItemDataRole.DisplayRole:
             key = self._columns[index.column()]
             value = self._json_data[index.row()].get(key)
@@ -100,6 +100,16 @@ class FondiModel(QAbstractTableModel):
                 return True
             row = row + 1
 
+    def getValue(self, isn, column_name):
+        row = 0
+        for campo in self._json_data:
+            if campo["isin"] in isn:
+                # if not (0 <= row < self.rowCount()):
+                #     return False
+                if column_name not in self._columns:
+                    return False
+                return float(self._json_data[row][column_name])
+            row = row + 1
 
     def aggiornaRiga(self,row,dati):
         # for row in self._json_data:
@@ -112,12 +122,11 @@ class FondiModel(QAbstractTableModel):
 
         self.dataChanged.emit(left, right)
 
-
-    # def setData(self, row, column_name, value):
-    #     self._json_data[row][column_name] = value
-    #     column = self._columns.index(column_name)
-    #     index = self.index(row, column)
-    #     self.dataChanged.emit(index, index)
+    def setData(self, row, column_name, value):
+        self._json_data[row][column_name] = value
+        column = self._columns.index(column_name)
+        index = self.index(row, column)
+        self.dataChanged.emit(index, index)
 
     def setColumn(self, name, values):
         if len(values) != self.rowCount():
@@ -128,6 +137,8 @@ class FondiModel(QAbstractTableModel):
         top = self.index(0, column)
         bottom = self.index(self.rowCount() - 1, column)
         self.dataChanged.emit(top, bottom)
+
+
 
     def flags(self, index):
         return (

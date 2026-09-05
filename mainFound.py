@@ -38,6 +38,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.model = FondiModel(self.data)
         self.tableView.setModel(self.model)
         self.model.addColumn("PrezzoSingolo", 0.0)
+        self.model.addColumn("Totale", 0.0)
         self.model.addColumn("Guadagno", 0.0)
         self.updateButton.clicked.connect(self.execute)
         self.progressBar.setValue(0)
@@ -182,7 +183,9 @@ class MainWindow(QMainWindow,Ui_MainWindow):
             self.model.f_Price = float(price.text.replace(",", "."))
             self.model.setValue(isin,"PrezzoSingolo",self.model.f_Price)
             self.gdn = self.model.getValue(isin,"qta")
-            self.model.setValue(isin, "Guadagno", self.gdn*self.model.f_Price)
+            self.inv = self.model.getValue(isin, "investment")
+            self.model.setValue(isin, "Totale", self.gdn*self.model.f_Price)
+            self.model.setValue(isin, "Guadagno", (self.gdn * self.model.f_Price - self.inv))
             # self.model.prezzoAttuale = (float)(data["fondi"][i]["qta"]) * f_Price
             # self.model.guadagno += prezzoAttuale - (float)(data["fondi"][i]["investment"])
             # return  self.model.prezzoAttuale

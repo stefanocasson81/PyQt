@@ -1,7 +1,7 @@
 # from PyQt6.QtWidgets import QApplication, QTableView, QMainWindow, QVBoxLayout, QWidget, QAbstractItemView, QTableWidget
 # from PyQt6.QtCore import QRunnable,QObject, QThreadPool, QTimer, pyqtSlot,pyqtSignal
 # from PyQt6.QtGui import QImage
-# from PyQt6.QtGui import QColor,QAction,QIcon
+from PyQt6.QtGui import QColor,QAction,QIcon
 # from PyQt6.QtWidgets import QApplication, QTableView, QMainWindow, QVBoxLayout, QWidget, QAbstractItemView, QTableWidget
 # from PyQt6.QtCore import QRunnable,QObject, QThreadPool, QTimer, pyqtSlot,pyqtSignal
 from PyQt6.QtCore import Qt,QAbstractTableModel, QModelIndex
@@ -49,10 +49,13 @@ class FondiModel(QAbstractTableModel):
         self.endInsertColumns()
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+
         if not index.isValid():
             return None
+
+        key = self._columns[index.column()]
+
         if role == Qt.ItemDataRole.DisplayRole:
-            key = self._columns[index.column()]
             value = self._json_data[index.row()].get(key)
 
             if isinstance(value, float):
@@ -62,6 +65,11 @@ class FondiModel(QAbstractTableModel):
                 return str(value)
 
             return value
+
+        if role == Qt.ItemDataRole.ForegroundRole:
+            color = self._json_data[index.row()].get('color')
+            if color is not None:
+                return color
 
         return None
 
@@ -95,8 +103,15 @@ class FondiModel(QAbstractTableModel):
                     return False
                 col = self._columns.index(column_name)
                 self._json_data[row][column_name] = value
+                # Salva il colore in base al segno del valore
+                if value < 0:
+                    self._json_data[row]['color'] = QColor(Qt.GlobalColor.red)
+                else:
+                    self._json_data[row]['color'] = QColor(Qt.GlobalColor.black)
+
                 index = self.index(row, col)
                 self.dataChanged.emit(index, index)
+
                 return True
             row = row + 1
 
@@ -137,8 +152,6 @@ class FondiModel(QAbstractTableModel):
         top = self.index(0, column)
         bottom = self.index(self.rowCount() - 1, column)
         self.dataChanged.emit(top, bottom)
-
-
 
     def flags(self, index):
         return (

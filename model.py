@@ -52,11 +52,10 @@ class FondiModel(QAbstractTableModel):
 
         if not index.isValid():
             return None
-
         key = self._columns[index.column()]
+        value = self._json_data[index.row()].get(key)
 
         if role == Qt.ItemDataRole.DisplayRole:
-            value = self._json_data[index.row()].get(key)
 
             if isinstance(value, float):
                 return f"{value:.2f}"
@@ -67,9 +66,12 @@ class FondiModel(QAbstractTableModel):
             return value
 
         if role == Qt.ItemDataRole.ForegroundRole:
-            color = self._json_data[index.row()].get('color')
-            if color is not None:
-                return color
+            try:
+                if float(value) < 0:
+                    return QColor(Qt.GlobalColor.red)
+            except (TypeError, ValueError):
+                pass
+            return QColor(Qt.GlobalColor.black)
 
         return None
 
@@ -84,6 +86,12 @@ class FondiModel(QAbstractTableModel):
         self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount())
         self._json_data.append(nuovo)
         self.endInsertRows()
+
+    def remove_element(self,nuovo):
+        idx = self._json_data.index(nuovo)
+        self.beginRemoveRows(QModelIndex(), idx, idx)
+        self._json_data.pop(idx)
+        self.endRemoveRows()
 
     def setData(self,index,value,role):
         if role == Qt.ItemDataRole.EditRole:
@@ -103,11 +111,12 @@ class FondiModel(QAbstractTableModel):
                     return False
                 col = self._columns.index(column_name)
                 self._json_data[row][column_name] = value
+                # self.setGuadagnoTotale(value)
                 # Salva il colore in base al segno del valore
-                if value < 0:
-                    self._json_data[row]['color'] = QColor(Qt.GlobalColor.red)
-                else:
-                    self._json_data[row]['color'] = QColor(Qt.GlobalColor.black)
+                # if value < 0:
+                #     self._json_data[row]['color'] = QColor(Qt.GlobalColor.red)
+                # else:
+                #     self._json_data[row]['color'] = QColor(Qt.GlobalColor.black)
 
                 index = self.index(row, col)
                 self.dataChanged.emit(index, index)
@@ -159,3 +168,6 @@ class FondiModel(QAbstractTableModel):
                 | Qt.ItemFlag.ItemIsEnabled
                 | Qt.ItemFlag.ItemIsEditable
         )
+
+    def setGuadagnoTotale(self, totale):
+        self.self.guadagno = self.self.guadagno + totale

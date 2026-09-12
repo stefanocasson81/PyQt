@@ -19,10 +19,27 @@
      <widget class="QWidget" name="widget" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QTableView" name="tableView"/>
+        <widget class="QTableView" name="tableView">
+         <property name="minimumSize">
+          <size>
+           <width>1265</width>
+           <height>459</height>
+          </size>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Guadagno Totale</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextBrowser" name="textBrowser"/>
     </item>
     <item>
      <widget class="QLineEdit" name="lineEdit_isin">
@@ -67,14 +84,14 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="lineEdit_status"/>
-    </item>
-    <item>
      <widget class="QProgressBar" name="progressBar">
       <property name="value">
        <number>24</number>
       </property>
      </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="lineEdit_status"/>
     </item>
    </layout>
   </widget>

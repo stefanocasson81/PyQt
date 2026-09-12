@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'mainwindow.ui'
+# Form implementation generated from reading ui file 'mainWindow.ui'
 #
 # Created by: PyQt6 UI code generator 6.9.1
 #
@@ -22,9 +22,16 @@ class Ui_MainWindow(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.tableView = QtWidgets.QTableView(parent=self.widget)
+        self.tableView.setMinimumSize(QtCore.QSize(1265, 459))
         self.tableView.setObjectName("tableView")
         self.horizontalLayout.addWidget(self.tableView)
         self.verticalLayout.addWidget(self.widget)
+        self.label = QtWidgets.QLabel(parent=self.centralwidget)
+        self.label.setObjectName("label")
+        self.verticalLayout.addWidget(self.label)
+        self.textBrowser = QtWidgets.QTextBrowser(parent=self.centralwidget)
+        self.textBrowser.setObjectName("textBrowser")
+        self.verticalLayout.addWidget(self.textBrowser)
         self.lineEdit_isin = QtWidgets.QLineEdit(parent=self.centralwidget)
         self.lineEdit_isin.setObjectName("lineEdit_isin")
         self.verticalLayout.addWidget(self.lineEdit_isin)
@@ -43,13 +50,13 @@ class Ui_MainWindow(object):
         self.updateButton = QtWidgets.QPushButton(parent=self.centralwidget)
         self.updateButton.setObjectName("updateButton")
         self.verticalLayout.addWidget(self.updateButton)
-        self.lineEdit_status = QtWidgets.QLineEdit(parent=self.centralwidget)
-        self.lineEdit_status.setObjectName("lineEdit_status")
-        self.verticalLayout.addWidget(self.lineEdit_status)
         self.progressBar = QtWidgets.QProgressBar(parent=self.centralwidget)
         self.progressBar.setProperty("value", 24)
         self.progressBar.setObjectName("progressBar")
         self.verticalLayout.addWidget(self.progressBar)
+        self.lineEdit_status = QtWidgets.QLineEdit(parent=self.centralwidget)
+        self.lineEdit_status.setObjectName("lineEdit_status")
+        self.verticalLayout.addWidget(self.lineEdit_status)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1301, 33))
@@ -82,6 +89,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Todo"))
+        self.label.setText(_translate("MainWindow", "Guadagno Totale"))
         self.lineEdit_isin.setText(_translate("MainWindow", "isin"))
         self.lineEdit_desc.setText(_translate("MainWindow", "desc"))
         self.lineEdit_qta.setText(_translate("MainWindow", "qta"))

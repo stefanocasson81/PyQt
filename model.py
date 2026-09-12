@@ -111,7 +111,8 @@ class FondiModel(QAbstractTableModel):
                     return False
                 col = self._columns.index(column_name)
                 self._json_data[row][column_name] = value
-                # self.setGuadagnoTotale(value)
+                if column_name == 'Guadagno':
+                    self.setGuadagnoTotale(value)
                 # Salva il colore in base al segno del valore
                 # if value < 0:
                 #     self._json_data[row]['color'] = QColor(Qt.GlobalColor.red)
@@ -170,4 +171,4 @@ class FondiModel(QAbstractTableModel):
         )
 
     def setGuadagnoTotale(self, totale):
-        self.self.guadagno = self.self.guadagno + totale
+        self.guadagno = self.guadagno + totale

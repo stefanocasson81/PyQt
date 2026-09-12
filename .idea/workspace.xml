@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="9bda5b79-00bc-488d-baba-8e1f20dcb149" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/isin.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/isin.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mainWindow.ui" beforeDir="false" afterPath="$PROJECT_DIR$/mainWindow.ui" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -48,7 +45,7 @@
     "Python.mainFound.executor": "Debug",
     "Python.mainFound_2.executor": "Run",
     "Python.mainWindow.executor": "Run",
-    "Python.model.executor": "Run",
+    "Python.model.executor": "Debug",
     "Python.multithread.executor": "Run",
     "Python.template.executor": "Run",
     "Python.traceback.executor": "Run",

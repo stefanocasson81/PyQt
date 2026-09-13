@@ -29,6 +29,7 @@ datafile = os.path.join(basedir,"config", "isin.json")
 #pyuic6 mainwindow.ui -o MainWindow.py
 
 class MainWindow(QMainWindow,Ui_MainWindow):
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -92,6 +93,8 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         #self.timer.timeout.connect(self.recurring_timer)
         self.timer.start()
 
+        self.model.guadagno.connect(lambda v: self.textBrowser.setText(str(v)))
+
 
     def load(self):
         try:
@@ -126,6 +129,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
     def execute(self):
         worker = Worker(self.aggiornaDati,self.data)
+        self.model.azzeraGuadagnoTotale()
         # worker.signals.finished.connect(self.model.aggiornaRiga)
         # worker.signals.result.connect(self.on_result)
         worker.signals.error.connect(self.on_error)

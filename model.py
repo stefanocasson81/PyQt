@@ -4,9 +4,12 @@
 from PyQt6.QtGui import QColor,QAction,QIcon
 # from PyQt6.QtWidgets import QApplication, QTableView, QMainWindow, QVBoxLayout, QWidget, QAbstractItemView, QTableWidget
 # from PyQt6.QtCore import QRunnable,QObject, QThreadPool, QTimer, pyqtSlot,pyqtSignal
-from PyQt6.QtCore import Qt,QAbstractTableModel, QModelIndex
+from PyQt6.QtCore import Qt, QAbstractTableModel, QModelIndex, pyqtSignal
+
 
 class FondiModel(QAbstractTableModel):
+    guadagno = pyqtSignal(float)
+
     def __init__(self,json_data=None):
         #super(FondiModel,self).__init__()
         super().__init__()
@@ -17,10 +20,13 @@ class FondiModel(QAbstractTableModel):
         self.name_list = []
         self.price_list = []
         self.date_list = []
-        self.guadagno = 0.0
+        # self.guadagno = 0.0
         self.somma = 0
         self.f_Price = 0
         self.quota = 0
+        self.guadagnoTotale = 0.0
+
+
 
     # def rowCount(self, parent=QModelIndex()):
     #     return len(self._json_data)
@@ -167,8 +173,13 @@ class FondiModel(QAbstractTableModel):
         return (
                 Qt.ItemFlag.ItemIsSelectable
                 | Qt.ItemFlag.ItemIsEnabled
-                | Qt.ItemFlag.ItemIsEditable
+                # | Qt.ItemFlag.ItemIsEditable
         )
 
     def setGuadagnoTotale(self, totale):
-        self.guadagno = self.guadagno + totale
+        self.guadagnoTotale = self.guadagnoTotale + totale
+        self.guadagno.emit(self.guadagnoTotale)
+
+    def azzeraGuadagnoTotale(self):
+        self.guadagnoTotale = 0
+        self.guadagno.emit(self.guadagnoTotale)

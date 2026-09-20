@@ -36,7 +36,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.show()
         self.setWindowTitle("Tabella Fondi")
         self.data = self.load()
-        self.model = FondiModel(self.data)
+        self.model = FondiModel(self.data["fondi"],self.data["_config"])
         self.tableView.setModel(self.model)
         self.model.addColumn("PrezzoSingolo", 0.0)
         self.model.addColumn("Totale", 0.0)
@@ -128,7 +128,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
 
     def execute(self):
-        worker = Worker(self.aggiornaDati,self.data)
+        worker = Worker(self.aggiornaDati,self.data["fondi"])
         self.model.azzeraGuadagnoTotale()
         # worker.signals.finished.connect(self.model.aggiornaRiga)
         # worker.signals.result.connect(self.on_result)
@@ -208,3 +208,25 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
     app.exec()
+
+
+# dati = carica_dati()
+# fondo = dati["fondi"][0]
+# campi = fondo.keys()
+# print(campi)  # dict_keys(['isin', 'desc', 'qta', 'investment'])
+# 
+# def get_campi_con_editable(dati, fondo):
+#     config = dati["_config"]
+#     risultato = {}
+#     for campo, valore in fondo.items():
+#         editable = config.get(campo, {}).get("editable", False)  # default False se non in config
+#         risultato[campo] = {"value": valore, "editable": editable}
+#     return risultato
+# 
+# dati = carica_dati()
+# fondo = dati["fondi"][0]
+# campi = get_campi_con_editable(dati, fondo)
+# 
+# for nome, info in campi.items():
+#     stato = "modificabile" if info["editable"] else "sola lettura"
+#     print(f"{nome}: {info['value']} ({stato})")

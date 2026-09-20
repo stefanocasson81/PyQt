@@ -10,18 +10,18 @@ from PyQt6.QtCore import Qt, QAbstractTableModel, QModelIndex, pyqtSignal
 class FondiModel(QAbstractTableModel):
     guadagno = pyqtSignal(float)
 
-    def __init__(self,json_data=None):
+    def __init__(self,json_data=None,config=None):
         #super(FondiModel,self).__init__()
         super().__init__()
         self._json_data =  json_data or {}
         self._columns = list(self._json_data[0].keys())
         self.url = 'https://www.boursorama.com/bourse/opcvm/cours/'
-
-        self.name_list = []
-        self.price_list = []
-        self.date_list = []
-        # self.guadagno = 0.0
-        self.somma = 0
+        self._config = config
+        # self.name_list = []
+        # self.price_list = []
+        # self.date_list = []
+        # # self.guadagno = 0.0
+        # self.somma = 0
         self.f_Price = 0
         self.quota = 0
         self.guadagnoTotale = 0.0
@@ -170,11 +170,19 @@ class FondiModel(QAbstractTableModel):
         self.dataChanged.emit(top, bottom)
 
     def flags(self, index):
-        return (
+        if self._config[self._columns[index.column()]].get("editable"):
+            return (
                 Qt.ItemFlag.ItemIsSelectable
                 | Qt.ItemFlag.ItemIsEnabled
-                # | Qt.ItemFlag.ItemIsEditable
-        )
+                | Qt.ItemFlag.ItemIsEditable
+            )
+        else:
+            return (
+                    Qt.ItemFlag.ItemIsSelectable
+                    | Qt.ItemFlag.ItemIsEnabled
+                    # | Qt.ItemFlag.ItemIsEditable
+            )
+
 
     def setGuadagnoTotale(self, totale):
         self.guadagnoTotale = self.guadagnoTotale + totale

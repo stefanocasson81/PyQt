@@ -182,8 +182,8 @@ class MainWindow(QMainWindow,Ui_MainWindow):
             # else:
             name = soup_res.find('a', {'class': 'c-faceplate__company-link'})
             price = soup_res.find('span', {'class': 'c-instrument c-instrument--last'})
-            self.model.name_list.append(name.text.strip())
-            self.model.price_list.append(''.join(price.text.split()))
+            # self.model.name_list.append(name.text.strip())
+            # self.model.price_list.append(''.join(price.text.split()))
             self.model.f_Price = float(price.text.replace(",", "."))
             self.model.setValue(isin,"PrezzoSingolo",self.model.f_Price)
             self.gdn = self.model.getValue(isin,"qta")

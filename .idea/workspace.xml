@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="9bda5b79-00bc-488d-baba-8e1f20dcb149" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/isin.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/isin.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mainFound.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainFound.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -44,13 +42,14 @@
     "Python._colorize.executor": "Run",
     "Python.getFunds.executor": "Run",
     "Python.main.executor": "Run",
-    "Python.mainFound.executor": "Debug",
+    "Python.mainFound.executor": "Run",
     "Python.mainFound_2.executor": "Run",
     "Python.mainWindow.executor": "Run",
     "Python.model.executor": "Run",
     "Python.multithread.executor": "Run",
     "Python.template.executor": "Run",
     "Python.traceback.executor": "Run",
+    "Python.worker.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -103,18 +102,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>191</line>
-          <option name="timeStamp" value="42" />
+          <line>37</line>
+          <option name="timeStamp" value="71" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model.py</url>
-          <line>174</line>
-          <option name="timeStamp" value="64" />
+          <url>file://$PROJECT_DIR$/worker.py</url>
+          <line>54</line>
+          <option name="timeStamp" value="72" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model.py</url>
-          <line>180</line>
-          <option name="timeStamp" value="65" />
+          <url>file://$PROJECT_DIR$/mainFound.py</url>
+          <line>184</line>
+          <option name="timeStamp" value="75" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -127,8 +126,7 @@
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="self._config[&quot;isin&quot;]" language="Python" />
-        <watch expression="self._config[self._columns[index.column()]]" language="Python" />
+        <watch expression="fondo" language="Python" />
       </configuration>
     </watches-manager>
   </component>

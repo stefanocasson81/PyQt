@@ -8,10 +8,10 @@
       "editable": false
     },
     "qta": {
-      "editable": true
+      "editable": false
     },
     "investment": {
-      "editable": true
+      "editable": false
     }
   },
   "fondi": [

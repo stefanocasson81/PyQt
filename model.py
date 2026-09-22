@@ -20,7 +20,7 @@ class FondiModel(QAbstractTableModel):
         # self.name_list = []
         # self.price_list = []
         # self.date_list = []
-        # # self.guadagno = 0.0
+        # self.guadagno = 0.0
         # self.somma = 0
         self.f_Price = 0
         self.quota = 0
@@ -170,18 +170,12 @@ class FondiModel(QAbstractTableModel):
         self.dataChanged.emit(top, bottom)
 
     def flags(self, index):
-        if self._config[self._columns[index.column()]].get("editable"):
-            return (
-                Qt.ItemFlag.ItemIsSelectable
-                | Qt.ItemFlag.ItemIsEnabled
-                | Qt.ItemFlag.ItemIsEditable
-            )
-        else:
-            return (
-                    Qt.ItemFlag.ItemIsSelectable
-                    | Qt.ItemFlag.ItemIsEnabled
-                    # | Qt.ItemFlag.ItemIsEditable
-            )
+        flag = Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled
+        for r in self._config.keys():
+            if r is self._columns[index.column()]:
+                if self._config[r].get("editable", False):
+                    flag |= Qt.ItemFlag.ItemIsEditable
+        return flag
 
 
     def setGuadagnoTotale(self, totale):

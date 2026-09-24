@@ -7,7 +7,7 @@ import requests
 import sys
 from model import FondiModel
 from worker import *
-
+from PyQt6.QtSql import QSqlDatabase,QSqlQuery, QSqlTableModel
 
 import time
 #from control.control import Control
@@ -197,6 +197,26 @@ class MainWindow(QMainWindow,Ui_MainWindow):
             self.model.name_list.append('NA')
             self.model.price_list.append('NA')
 
+def crea_database(nome_file="magazzino.db"):
+    db = QSqlDatabase.addDatabase("QSQLITE")
+    db.setDatabaseName(nome_file)          # crea il file se non esiste
+    if not db.open():
+        raise RuntimeError(db.lastError().text())
+
+    query = QSqlQuery(db)
+    ok = query.exec("""
+        CREATE TABLE IF NOT EXISTS prodotti (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome        TEXT    NOT NULL,
+            categoria   TEXT,
+            prezzo      REAL    NOT NULL CHECK (prezzo >= 0),
+            quantita    INTEGER DEFAULT 0,
+            data_inserimento TEXT DEFAULT CURRENT_DATE
+        )
+    """)
+    if not ok:
+        raise RuntimeError(query.lastError().text())
+    return db
 
 ##############main windows#####################################################
 

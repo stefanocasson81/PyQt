@@ -7,6 +7,8 @@ import requests
 import sys
 from model import FondiModel
 from worker import *
+
+from sqlDB import *
 from PyQt6.QtSql import QSqlDatabase,QSqlQuery, QSqlTableModel
 
 import time
@@ -19,6 +21,7 @@ from PyQt6.QtGui import QImage
 # from PyQt6.QtGui import QColor,QAction,QIcon
 from PyQt6.QtWidgets import QApplication, QTableView, QMainWindow, QVBoxLayout, QWidget, QAbstractItemView, QTableWidget
 from PyQt6.QtCore import QRunnable,QObject, QThreadPool, QTimer, pyqtSlot,pyqtSignal
+
 
 basedir = os.path.dirname(__file__)
 
@@ -162,9 +165,12 @@ class MainWindow(QMainWindow,Ui_MainWindow):
                 progress=int((row+1)*100/totale)
                 progress_callback.emit(progress)
 
+
     def scarica_dati(self, isin):
         url = "https://www.boursorama.com/bourse/opcvm/cours/" + isin
         res = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+        nomeDb = "dbValori.db"
+        self.crea_database(nomeDb)
         # Checking for Bad download
         try:
             res.raise_for_status()
@@ -190,6 +196,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
             self.inv = self.model.getValue(isin, "investment")
             self.model.setValue(isin, "Totale", self.gdn*self.model.f_Price)
             self.model.setValue(isin, "Guadagno", (self.gdn * self.model.f_Price - self.inv))
+
             # self.model.prezzoAttuale = (float)(data["fondi"][i]["qta"]) * f_Price
             # self.model.guadagno += prezzoAttuale - (float)(data["fondi"][i]["investment"])
             # return  self.model.prezzoAttuale
@@ -197,26 +204,8 @@ class MainWindow(QMainWindow,Ui_MainWindow):
             self.model.name_list.append('NA')
             self.model.price_list.append('NA')
 
-def crea_database(nome_file="magazzino.db"):
-    db = QSqlDatabase.addDatabase("QSQLITE")
-    db.setDatabaseName(nome_file)          # crea il file se non esiste
-    if not db.open():
-        raise RuntimeError(db.lastError().text())
 
-    query = QSqlQuery(db)
-    ok = query.exec("""
-        CREATE TABLE IF NOT EXISTS prodotti (
-            id          INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome        TEXT    NOT NULL,
-            categoria   TEXT,
-            prezzo      REAL    NOT NULL CHECK (prezzo >= 0),
-            quantita    INTEGER DEFAULT 0,
-            data_inserimento TEXT DEFAULT CURRENT_DATE
-        )
-    """)
-    if not ok:
-        raise RuntimeError(query.lastError().text())
-    return db
+
 
 ##############main windows#####################################################
 
@@ -230,23 +219,3 @@ if __name__ == "__main__":
     app.exec()
 
 
-# dati = carica_dati()
-# fondo = dati["fondi"][0]
-# campi = fondo.keys()
-# print(campi)  # dict_keys(['isin', 'desc', 'qta', 'investment'])
-# 
-# def get_campi_con_editable(dati, fondo):
-#     config = dati["_config"]
-#     risultato = {}
-#     for campo, valore in fondo.items():
-#         editable = config.get(campo, {}).get("editable", False)  # default False se non in config
-#         risultato[campo] = {"value": valore, "editable": editable}
-#     return risultato
-# 
-# dati = carica_dati()
-# fondo = dati["fondi"][0]
-# campi = get_campi_con_editable(dati, fondo)
-# 
-# for nome, info in campi.items():
-#     stato = "modificabile" if info["editable"] else "sola lettura"
-#     print(f"{nome}: {info['value']} ({stato})")

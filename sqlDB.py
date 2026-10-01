@@ -8,27 +8,40 @@ from pathlib import Path
 import os
 
 class dataBaseSql():
-    def __init__(self, fileName="dbValori.db"):
-        self.nome_file = fileName
+    def __init__(self, fileName):
+        self.nome_file = str(fileName)
 
     def apri_database(self):
         """Crea (o apre) il file SQLite."""
-        db = QSqlDatabase.addDatabase("QSQLITE")
-        db.setDatabaseName(self.nome_file)
-        if not db.open():
-            print("Errore apertura database:", db.lastError().text())
-            return None
-        return db
+        basedir = os.path.dirname(os.path.abspath(__file__))
+        db_path = os.path.join(basedir, str(self.nome_file))
+        if os.path.exists(db_path):
+            print("Database esistente")
+            db = QSqlDatabase.addDatabase("QSQLITE")
+            db.setDatabaseName(self.nome_file)
+        else:
+            print("Database non esistente, verrà creato")
+            db = QSqlDatabase.addDatabase("QSQLITE")
+            db.setDatabaseName(self.nome_file)
+            if db.open():
+                ok = self.crea_tabella()
+            else:
+                print("Il file non si apre")
 
-    def crea_database(self):
-        basedir = os.path.dirname(__file__)
-        if Path (self.nome_file).exists():
-            return True
-        db=QSqlDatabase.addDatabase("SQLITE")
-        db.setDatabaseName(os.path.join(basedir, str(self.nome_file)))
-        if not db.open():
-            self.crea_tabella()
-            return db
+
+        # db = QSqlDatabase.addDatabase("SQLITE")
+        #
+        # # db.setDatabaseName(os.path.join(basedir, self.nome_file))
+        # db.setDatabaseName(self.nome_file)
+        # if db.open():
+        #     # if not os.path.exists(os.path.join(basedir, self.nome_file)):
+        #     if not os.path.exists(self.nome_file)):
+        #         ok = self.crea_tabella()
+        #     else:
+        #         return True
+        # return False
+
+
 
     def crea_tabella(self):
         """Definisci qui le colonne (voci) del tuo database."""
@@ -42,10 +55,14 @@ class dataBaseSql():
         """)
         if not ok:
             print("Errore creazione tabella:", query.lastError().text())
-        return ok
+            return None
+        else:
+            return ok
 
 
-    def inserisci_prodotto(nome, categoria, quantita, prezzo):
+
+
+    def inserisci_prodotto(self,nome, categoria, quantita, prezzo):
         query = QSqlQuery()
         query.prepare(
             "INSERT INTO prodotti (nome, categoria, quantita, prezzo) "
@@ -58,6 +75,8 @@ class dataBaseSql():
         if not query.exec():
             print("Errore inserimento:", query.lastError().text())
             return False
+        else:
+            print("Table Created successfully")
         return True
 
 

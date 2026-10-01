@@ -46,6 +46,8 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.model.addColumn("Guadagno", 0.0)
         self.updateButton.clicked.connect(self.execute)
         self.progressBar.setValue(0)
+        self.dataBase = dataBaseSql("dbValori.db")
+        self.dataBase.apri_database()
         self.threadpool = QThreadPool()
         thread_count = self.threadpool.maxThreadCount()
         print(f"Multithreading with maximum {thread_count} threads")
@@ -169,8 +171,6 @@ class MainWindow(QMainWindow,Ui_MainWindow):
     def scarica_dati(self, isin):
         url = "https://www.boursorama.com/bourse/opcvm/cours/" + isin
         res = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
-        nomeDb = "dbValori.db"
-        self.crea_database(nomeDb)
         # Checking for Bad download
         try:
             res.raise_for_status()

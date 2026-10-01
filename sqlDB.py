@@ -4,11 +4,15 @@
 #     QVBoxLayout, QHBoxLayout, QPushButton, QMessageBox,
 # )
 from PyQt6.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
-from pathlib import Path
 import os
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtCore import QObject, pyqtSignal
 
-class dataBaseSql():
+class dataBaseSql(QObject):
+    messaggio = pyqtSignal(str)
+
     def __init__(self, fileName):
+        super().__init__()
         self.nome_file = str(fileName)
 
     def apri_database(self):
@@ -16,9 +20,13 @@ class dataBaseSql():
         basedir = os.path.dirname(os.path.abspath(__file__))
         db_path = os.path.join(basedir, str(self.nome_file))
         if os.path.exists(db_path):
+            self.messaggio.emit("Database esistente")
             print("Database esistente")
             db = QSqlDatabase.addDatabase("QSQLITE")
             db.setDatabaseName(self.nome_file)
+            if db.open():
+                self.messaggio.emit("File Dataase Aperto correttamente")
+                print("File Dataase Aperto correttamente")
         else:
             print("Database non esistente, verrà creato")
             db = QSqlDatabase.addDatabase("QSQLITE")
@@ -26,7 +34,8 @@ class dataBaseSql():
             if db.open():
                 ok = self.crea_tabella()
             else:
-                print("Il file non si apre")
+                print("Database non esistente")
+                self.messaggio.emit("Database non esistente")
 
 
         # db = QSqlDatabase.addDatabase("SQLITE")
@@ -47,35 +56,49 @@ class dataBaseSql():
         """Definisci qui le colonne (voci) del tuo database."""
         query = QSqlQuery()
         ok = query.exec("""
-            CREATE TABLE IF NOT EXISTS prodotti (
+            CREATE TABLE IF NOT EXISTS fondi (
                 id        INTEGER PRIMARY KEY AUTOINCREMENT,
-                prezzo      REAL    NOT NULL CHECK (prezzo >= 0),
-                prezzo    REAL DEFAULT 0.0
-            )
+                prezzo    REAL NOT NULL DEFAULT 0.0 CHECK (prezzo >= 0),
+                data      TEXT NOT NULL
+                )
         """)
         if not ok:
+            self.messaggio.emit("Errore creazione tabella:", query.lastError().text())
             print("Errore creazione tabella:", query.lastError().text())
-            return None
+            return False
         else:
-            return ok
+            return True
+
+    def aggiornaPrezzo(self, id_fondo, prezzo, data):
+        query = QSqlQuery()
+        query.prepare("UPDATE fondi SET prezzo = ?,data = ?, WHERE id = ?")
+        query.addBindValue(prezzo)
+        query.addBindValue(data)
+        query.addBindValue(id_fondo)
+        if(not query.exec()):
+            self.messaggio.emit("Errore aggiunta fondi:", query.lastError().text())
+            print("Errore aggiunta fondi:", query.lastError().text())
+            return False
+        if query.numRowsAffected() == 0:
+            self.messaggio.emit("Nessun fondo con id", id_fondo)
+            print("Nessun fondo con id", id_fondo)
+            return False
+        return True
 
 
-
-
-    def inserisci_prodotto(self,nome, categoria, quantita, prezzo):
+    def inserisci_prodotto(self,prezzo,data):
         query = QSqlQuery()
         query.prepare(
-            "INSERT INTO prodotti (nome, categoria, quantita, prezzo) "
-            "VALUES (?, ?, ?, ?)"
+            "INSERT INTO fondi (prezzo, data) VALUES (?, ?) "
         )
-        query.addBindValue(nome)
-        query.addBindValue(categoria)
-        query.addBindValue(quantita)
         query.addBindValue(prezzo)
+        query.addBindValue(data)
         if not query.exec():
+            self.messaggio.emit("Errore inserimento:", query.lastError().text())
             print("Errore inserimento:", query.lastError().text())
             return False
         else:
+            self.messaggio.emit("Table Created successfully")
             print("Table Created successfully")
         return True
 

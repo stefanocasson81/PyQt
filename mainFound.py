@@ -21,6 +21,7 @@ from PyQt6.QtGui import QImage
 # from PyQt6.QtGui import QColor,QAction,QIcon
 from PyQt6.QtWidgets import QApplication, QTableView, QMainWindow, QVBoxLayout, QWidget, QAbstractItemView, QTableWidget
 from PyQt6.QtCore import QRunnable,QObject, QThreadPool, QTimer, pyqtSlot,pyqtSignal
+from datetime import datetime, date
 
 
 basedir = os.path.dirname(__file__)
@@ -53,14 +54,21 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         print(f"Multithreading with maximum {thread_count} threads")
         # self.tableView.setEditTriggers(QAbstractItemView.doubleClicked(index.row))
 
+        #LISTA signals
+        #sqlDB
+        self.dataBase.messaggio.connect(lambda v: self.lineEdit_status.setText(str(v)))
+
         # worker.updated.connect(self.model.aggiornaRiga,)
         # worker.signals.result.connect(self.print_output)
 
         # worker.signals.progress.connect(self.on_progress)
 
+
         # worker.signals.progress.connect(self.progress_fn)
         # layout = QVBoxLayout()
         # layout.addWidget(self.table)
+
+
 
         # 1. Creazione della Menu Bar
         # menubar = self.menuBar()
@@ -159,9 +167,13 @@ class MainWindow(QMainWindow,Ui_MainWindow):
     #     self.counter += 1
     #     self.label.setText(f"Counter: {self.counter}")
 
-    def aggiornaDati(self, data,progress_callback=None):
+    def aggiornaDati(self,data,progress_callback=None):
+        adesso = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         for row, fondo in enumerate(data):
-            self.scarica_dati(fondo["isin"])
+            prezzo = self.scarica_dati(fondo["isin"])
+            if prezzo is not None:
+                self.dataBase.aggiornaPrezzo(fondo["isin"],prezzo,adesso)
+
             totale = len(data)
             if progress_callback:
                 progress=int((row+1)*100/totale)
@@ -200,9 +212,12 @@ class MainWindow(QMainWindow,Ui_MainWindow):
             # self.model.prezzoAttuale = (float)(data["fondi"][i]["qta"]) * f_Price
             # self.model.guadagno += prezzoAttuale - (float)(data["fondi"][i]["investment"])
             # return  self.model.prezzoAttuale
+            return self.model.f_Price
+
         except:
             self.model.name_list.append('NA')
             self.model.price_list.append('NA')
+            return None
 
 
 

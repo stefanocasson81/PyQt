@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9bda5b79-00bc-488d-baba-8e1f20dcb149" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/GetFoundsQT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/GetFoundsQT.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mainFound.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainFound.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sqlDB.py" beforeDir="false" afterPath="$PROJECT_DIR$/sqlDB.py" afterDir="false" />
@@ -106,19 +108,14 @@
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/sqlDB.py</url>
+          <line>21</line>
+          <option name="timeStamp" value="105" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>48</line>
-          <option name="timeStamp" value="90" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/sqlDB.py</url>
-          <line>59</line>
-          <option name="timeStamp" value="92" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/sqlDB.py</url>
-          <line>23</line>
-          <option name="timeStamp" value="93" />
+          <line>173</line>
+          <option name="timeStamp" value="107" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -134,6 +131,7 @@
         <watch expression="fondo" language="Python" />
         <watch expression="self.dataBase" language="Python" />
         <watch expression="basedir" language="Python" />
+        <watch expression="query.lastError().text()" language="Python" />
       </configuration>
     </watches-manager>
   </component>

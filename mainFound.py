@@ -48,7 +48,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.updateButton.clicked.connect(self.execute)
         self.progressBar.setValue(0)
         self.dataBase = dataBaseSql("dbValori.db")
-        self.dataBase.apri_database()
+        # self.dataBase.apri_database()
         self.threadpool = QThreadPool()
         thread_count = self.threadpool.maxThreadCount()
         print(f"Multithreading with maximum {thread_count} threads")
@@ -172,7 +172,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         for row, fondo in enumerate(data):
             prezzo = self.scarica_dati(fondo["isin"])
             if prezzo is not None:
-                self.dataBase.aggiornaPrezzo(fondo["isin"],prezzo,adesso)
+                self.dataBase.inserisci_prodotto(fondo["isin"],prezzo,adesso)
 
             totale = len(data)
             if progress_callback:

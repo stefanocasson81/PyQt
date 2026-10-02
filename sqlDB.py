@@ -14,6 +14,7 @@ class dataBaseSql(QObject):
     def __init__(self, fileName):
         super().__init__()
         self.nome_file = str(fileName)
+        self.apri_database()
 
     def apri_database(self):
         """Crea (o apre) il file SQLite."""
@@ -36,20 +37,7 @@ class dataBaseSql(QObject):
             else:
                 print("Database non esistente")
                 self.messaggio.emit("Database non esistente")
-
-
-        # db = QSqlDatabase.addDatabase("SQLITE")
-        #
-        # # db.setDatabaseName(os.path.join(basedir, self.nome_file))
-        # db.setDatabaseName(self.nome_file)
-        # if db.open():
-        #     # if not os.path.exists(os.path.join(basedir, self.nome_file)):
-        #     if not os.path.exists(self.nome_file)):
-        #         ok = self.crea_tabella()
-        #     else:
-        #         return True
-        # return False
-
+        return db
 
 
     def crea_tabella(self):
@@ -63,7 +51,7 @@ class dataBaseSql(QObject):
                 )
         """)
         if not ok:
-            self.messaggio.emit("Errore creazione tabella:", query.lastError().text())
+            self.messaggio.emit(f"Errore creazione tabella: {query.lastError().text()}")
             print("Errore creazione tabella:", query.lastError().text())
             return False
         else:
@@ -71,30 +59,32 @@ class dataBaseSql(QObject):
 
     def aggiornaPrezzo(self, id_fondo, prezzo, data):
         query = QSqlQuery()
-        query.prepare("UPDATE fondi SET prezzo = ?,data = ?, WHERE id = ?")
+        query.prepare("UPDATE fondi SET prezzo = ?,data = ? WHERE id = ?")
         query.addBindValue(prezzo)
         query.addBindValue(data)
         query.addBindValue(id_fondo)
-        if(not query.exec()):
-            self.messaggio.emit("Errore aggiunta fondi:", query.lastError().text())
+        if not query.exec():
+            self.messaggio.emit(f"Errore aggiunta fondi:{query.lastError().text()}")
             print("Errore aggiunta fondi:", query.lastError().text())
             return False
         if query.numRowsAffected() == 0:
-            self.messaggio.emit("Nessun fondo con id", id_fondo)
+            self.messaggio.emit(f"Nessun fondo con id : {id_fondo}")
             print("Nessun fondo con id", id_fondo)
             return False
         return True
 
 
-    def inserisci_prodotto(self,prezzo,data):
+    def inserisci_prodotto(self,id_fondo,prezzo,data):
         query = QSqlQuery()
         query.prepare(
-            "INSERT INTO fondi (prezzo, data) VALUES (?, ?) "
+            "INSERT INTO fondi (prezzo, data) VALUES (?, ?) WHERE id = ? "
         )
-        query.addBindValue(prezzo)
-        query.addBindValue(data)
+        query.bindValue(":id", id_fondo)
+        query.bindValue(":prezzo", prezzo)
+        query.bindValue(":data", data)
+
         if not query.exec():
-            self.messaggio.emit("Errore inserimento:", query.lastError().text())
+            self.messaggio.emit(f"Errore inserimento: {query.lastError().text()}")
             print("Errore inserimento:", query.lastError().text())
             return False
         else:

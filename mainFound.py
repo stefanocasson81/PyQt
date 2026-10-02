@@ -169,17 +169,20 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
     def aggiornaDati(self,data,progress_callback=None):
         adesso = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-        db=self.dataBase.apri_database()
-        for row, fondo in enumerate(data):
-            prezzo = self.scarica_dati(fondo["isin"])
-            if prezzo is not None:
-                self.dataBase.inserisci_prodotto(fondo["isin"],prezzo,adesso,db)
+        db = self.dataBase.apri_database()
+        if not db:
+            return False
+        else:
+            for row, fondo in enumerate(data):
+                prezzo = self.scarica_dati(fondo["isin"])
+                if prezzo is not None:
+                    self.dataBase.inserisci_prodotto(fondo["isin"],prezzo,adesso,db)
 
-            totale = len(data)
-            if progress_callback:
-                progress=int((row+1)*100/totale)
-                progress_callback.emit(progress)
-
+                totale = len(data)
+                if progress_callback:
+                    progress=int((row+1)*100/totale)
+                    progress_callback.emit(progress)
+        return True
 
     def scarica_dati(self, isin):
         url = "https://www.boursorama.com/bourse/opcvm/cours/" + isin

@@ -169,10 +169,11 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
     def aggiornaDati(self,data,progress_callback=None):
         adesso = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        db=self.dataBase.apri_database()
         for row, fondo in enumerate(data):
             prezzo = self.scarica_dati(fondo["isin"])
             if prezzo is not None:
-                self.dataBase.inserisci_prodotto(fondo["isin"],prezzo,adesso)
+                self.dataBase.inserisci_prodotto(fondo["isin"],prezzo,adesso,db)
 
             totale = len(data)
             if progress_callback:

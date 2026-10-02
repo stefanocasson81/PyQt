@@ -14,7 +14,7 @@ class dataBaseSql(QObject):
     def __init__(self, fileName):
         super().__init__()
         self.nome_file = str(fileName)
-        self.apri_database()
+        # self.apri_database()
 
     def apri_database(self):
         """Crea (o apre) il file SQLite."""
@@ -37,6 +37,7 @@ class dataBaseSql(QObject):
             else:
                 print("Database non esistente")
                 self.messaggio.emit("Database non esistente")
+
         return db
 
 
@@ -46,8 +47,10 @@ class dataBaseSql(QObject):
         ok = query.exec("""
             CREATE TABLE IF NOT EXISTS fondi (
                 id        INTEGER PRIMARY KEY AUTOINCREMENT,
+                id_fondo  TEXT NOT NULL,
                 prezzo    REAL NOT NULL DEFAULT 0.0 CHECK (prezzo >= 0),
-                data      TEXT NOT NULL
+                data      TEXT NOT NULL,
+                UNIQUE (id_fondo, data)
                 )
         """)
         if not ok:
@@ -74,14 +77,14 @@ class dataBaseSql(QObject):
         return True
 
 
-    def inserisci_prodotto(self,id_fondo,prezzo,data):
-        query = QSqlQuery()
+    def inserisci_prodotto(self,id_fondo,prezzo,data,db):
+        query = QSqlQuery(db)
         query.prepare(
-            "INSERT INTO fondi (prezzo, data) VALUES (?, ?) WHERE id = ? "
+            "INSERT INTO fondi (id_fondo, prezzo, data) VALUES (?, ?, ?)"
         )
-        query.bindValue(":id", id_fondo)
-        query.bindValue(":prezzo", prezzo)
-        query.bindValue(":data", data)
+        query.addBindValue(str(id_fondo))
+        query.addBindValue(float(prezzo))
+        query.addBindValue(str(data))
 
         if not query.exec():
             self.messaggio.emit(f"Errore inserimento: {query.lastError().text()}")

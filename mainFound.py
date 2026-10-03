@@ -106,7 +106,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         #self.timer.timeout.connect(self.recurring_timer)
         self.timer.start()
 
-        self.model.guadagno.connect(lambda v: self.textBrowser.setText(str(v)))
+        self.model.guadagno.connect(lambda v: self.Guadagno.setText(str(v)))
 
 
     def load(self):

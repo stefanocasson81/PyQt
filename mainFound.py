@@ -48,6 +48,20 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.updateButton.clicked.connect(self.execute)
         self.progressBar.setValue(0)
         self.dataBase = dataBaseSql("dbValori.db")
+        self.db = self.dataBase.apri_database()
+        if self.db and self.db.isOpen():
+                self.model2 = QSqlTableModel(db=self.db)
+                self.model2.setTable("Tabella Fondi")
+                if self.model2.select():
+                    self.tableView_2.setModel(self.model2)
+                else:
+                    print("Errore select:", self.model2.lastError().text())
+        else:
+            print("Database non aperto")
+
+
+                # self.setCentralWidget(self.tableView_2)
+
         # self.dataBase.apri_database()
         self.threadpool = QThreadPool()
         thread_count = self.threadpool.maxThreadCount()
@@ -169,19 +183,15 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
     def aggiornaDati(self,data,progress_callback=None):
         adesso = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-        db = self.dataBase.apri_database()
-        if not db:
-            return False
-        else:
-            for row, fondo in enumerate(data):
-                prezzo = self.scarica_dati(fondo["isin"])
-                if prezzo is not None:
-                    self.dataBase.inserisci_prodotto(fondo["isin"],prezzo,adesso,db)
+        for row, fondo in enumerate(data):
+            prezzo = self.scarica_dati(fondo["isin"])
+            if prezzo is not None:
+                self.dataBase.inserisci_prodotto(fondo["isin"],prezzo,adesso)
 
-                totale = len(data)
-                if progress_callback:
-                    progress=int((row+1)*100/totale)
-                    progress_callback.emit(progress)
+            totale = len(data)
+            if progress_callback:
+                progress=int((row+1)*100/totale)
+                progress_callback.emit(progress)
         return True
 
     def scarica_dati(self, isin):

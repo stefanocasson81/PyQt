@@ -77,7 +77,7 @@ class dataBaseSql(QObject):
         return True
 
 
-    def inserisci_prodotto(self,id_fondo,prezzo,data,db):
+    def inserisci_prodotto(self,id_fondo,prezzo,data):
         query = QSqlQuery()
         query.prepare(
             "INSERT INTO fondi (id_fondo, prezzo, data) VALUES (?, ?, ?)"

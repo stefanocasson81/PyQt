@@ -9,6 +9,7 @@
       <change beforePath="$PROJECT_DIR$/mainFound.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainFound.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainWindow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mainWindow.ui" beforeDir="false" afterPath="$PROJECT_DIR$/mainWindow.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sqlDB.py" beforeDir="false" afterPath="$PROJECT_DIR$/sqlDB.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,32 +37,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python tests.Doctests in utils.executor&quot;: &quot;Run&quot;,
-    &quot;Python.QTableView.executor&quot;: &quot;Debug&quot;,
-    &quot;Python._colorize.executor&quot;: &quot;Run&quot;,
-    &quot;Python.getFunds.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mainFound.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mainFound_2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mainWindow.executor&quot;: &quot;Run&quot;,
-    &quot;Python.model.executor&quot;: &quot;Run&quot;,
-    &quot;Python.multithread.executor&quot;: &quot;Run&quot;,
-    &quot;Python.sqlDB.executor&quot;: &quot;Run&quot;,
-    &quot;Python.template.executor&quot;: &quot;Run&quot;,
-    &quot;Python.traceback.executor&quot;: &quot;Run&quot;,
-    &quot;Python.worker.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;QSqlDatabase&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Usr/Software/Python/PyQt&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python tests.Doctests in utils.executor": "Run",
+    "Python.QTableView.executor": "Debug",
+    "Python._colorize.executor": "Run",
+    "Python.getFunds.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.mainFound.executor": "Run",
+    "Python.mainFound_2.executor": "Run",
+    "Python.mainWindow.executor": "Run",
+    "Python.model.executor": "Run",
+    "Python.multithread.executor": "Run",
+    "Python.sqlDB.executor": "Run",
+    "Python.template.executor": "Run",
+    "Python.traceback.executor": "Run",
+    "Python.worker.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "QSqlDatabase",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/Usr/Software/Python/PyQt",
+    "settings.editor.selected.configurable": "preferences.keymap"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Usr\Software\Python\PyQt" />
@@ -111,6 +112,21 @@
           <line>50</line>
           <option name="timeStamp" value="108" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/mainFound.py</url>
+          <line>188</line>
+          <option name="timeStamp" value="117" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/mainFound.py</url>
+          <line>51</line>
+          <option name="timeStamp" value="120" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/mainFound.py</url>
+          <line>50</line>
+          <option name="timeStamp" value="121" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -122,8 +138,10 @@
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="query" />
         <watch expression="db" language="Python" />
+        <watch expression="self.db" language="Python" />
+        <watch expression="self.db.isOpen()" language="Python" />
+        <watch expression="self.model2" language="Python" />
       </configuration>
     </watches-manager>
   </component>

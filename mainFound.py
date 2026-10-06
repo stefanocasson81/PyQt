@@ -51,7 +51,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.db = self.dataBase.apri_database()
         if self.db and self.db.isOpen():
                 self.model2 = QSqlTableModel(db=self.db)
-                self.model2.setTable("Tabella Fondi")
+                self.model2.setTable("fondi")
                 if self.model2.select():
                     self.tableView_2.setModel(self.model2)
                 else:

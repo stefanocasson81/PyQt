@@ -24,14 +24,14 @@ class dataBaseSql(QObject):
             self.messaggio.emit("Database esistente")
             print("Database esistente")
             db = QSqlDatabase.addDatabase("QSQLITE")
-            db.setDatabaseName(self.nome_file)
+            db.setDatabaseName(db_path)
             if db.open():
                 self.messaggio.emit("File Dataase Aperto correttamente")
                 print("File Dataase Aperto correttamente")
         else:
             print("Database non esistente, verrà creato")
             db = QSqlDatabase.addDatabase("QSQLITE")
-            db.setDatabaseName(self.nome_file)
+            db.setDatabaseName(db_path)
             if db.open():
                 ok = self.crea_tabella()
             else:

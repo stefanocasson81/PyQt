@@ -122,6 +122,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
         self.model.guadagno.connect(lambda v: self.Guadagno.setText(str(v)))
 
+        self.tabWidget.setCurrentIndex(0)
 
     def load(self):
         try:
@@ -162,6 +163,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         worker.signals.error.connect(self.on_error)
         worker.signals.finished.connect(self.on_finished)
         worker.signals.progress.connect(self.updateProgress)
+        worker.signals.risultato.connect(self.aggiorna_database)
         self.threadpool.start(worker)
 
 
@@ -175,19 +177,23 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
     def on_finished(self):
         self.lineEdit_status.setText("Completato")
+        self.model2.select()
 
+    def aggiorna_database(self,isin,name,prezzo):
+        self.dataBase.aggiornaPrezzo(isin, name, prezzo )
 
     # def recurring_timer(self):
     #     self.counter += 1
     #     self.label.setText(f"Counter: {self.counter}")
 
-    def aggiornaDati(self,data,progress_callback=None):
+    def aggiornaDati(self,data,progress_callback=None,risultato_callback=None):
         adesso = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         for row, fondo in enumerate(data):
             prezzo = self.scarica_dati(fondo["isin"])
             if prezzo is not None:
-                self.dataBase.aggiornaPrezzo(fondo["isin"],fondo["desc"],prezzo)
-                # self.dataBase.inserisci_prodotto(fondo["isin"],fondo["desc"],row)
+                risultato_callback.emit(fondo["isin"], fondo["desc"], prezzo)
+            else:
+                risultato_callback.emit(fondo["isin"], fondo["desc"], 0)
             totale = len(data)
             if progress_callback:
                 progress=int((row+1)*100/totale)

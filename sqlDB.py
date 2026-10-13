@@ -27,62 +27,62 @@ class dataBaseSql(QObject):
             db = QSqlDatabase.addDatabase("QSQLITE")
             db.setDatabaseName(db_path)
             if db.open():
-                self.messaggio.emit("File Dataase Aperto correttamente")
+                self.messaggio.emit("File Database Aperto correttamente")
                 print("File Dataase Aperto correttamente")
+                return db
+            else:
+                print("Database non aperto correttamente")
+                self.messaggio.emit("Database non aperto correttamente")
+                return None
         else:
             print("Database non esistente, verrà creato")
             db = QSqlDatabase.addDatabase("QSQLITE")
             db.setDatabaseName(db_path)
             if db.open():
                 ok = self.crea_tabella()
+                if ok:
+                    return db
+                else:
+                    print("Tabella non creata")
+                    return None
             else:
                 print("Database non esistente")
                 self.messaggio.emit("Database non esistente")
-
-        return db
-
+                return None
 
     def crea_tabella(self):
-        """Definisci qui le colonne (voci) del tuo database."""
         query = QSqlQuery()
-        query.exec("PRAGMA foreign_keys = ON")
-        ok = query.exec("""
-            CREATE TABLE IF NOT EXISTS fondi (
-                id        INTEGER PRIMARY KEY,
-                isin      TEXT NOT NULL UNIQUE,
-                nome      TEXT NOT NULL,
-                valuta    TEXT DEFAULT 'EUR',
-                )
-            """)
-        query.exec("""
-            CREATE TABLE IF NOT EXISTS prezzi (
-                fondo_id  INTEGER NOT NULL REFERENCES fondi(id),
-                data      TEXT NOT NULL,
-                valore    REAL NOT NULL,
-                PRIMARY KEY (fondo_id, data)
-                )
-            """)
-        query.exec("""
-            CREATE INDEX IF NOT EXISTS idx_prezzi_data ON prezzi(data)
-            """)
+        istruzioni = [
+            """CREATE TABLE IF NOT EXISTS fondi (
+                   id     INTEGER PRIMARY KEY,
+                   isin   TEXT NOT NULL UNIQUE,
+                   nome   TEXT NOT NULL,
+                   valuta TEXT DEFAULT 'EUR')""",
+            """CREATE TABLE IF NOT EXISTS prezzi (
+                   fondo_id INTEGER NOT NULL REFERENCES fondi(id),
+                   data     TEXT NOT NULL,
+                   valore   REAL NOT NULL,
+                   PRIMARY KEY (fondo_id, data))""",
+            "CREATE INDEX IF NOT EXISTS idx_prezzi_data ON prezzi(data)",
+        ]
+        for sql in istruzioni:
+            if not query.exec(sql):
+                self.messaggio.emit(f"Errore creazione tabella: {query.lastError().text()}")
+                print(f"Errore creazione tabella: {query.lastError().text()}")
+                return False
+        return True
 
-        if not ok:
-            self.messaggio.emit(f"Errore creazione tabella: {query.lastError().text()}")
-            print("Errore creazione tabella:", query.lastError().text())
-            return False
-        else:
-            return True
-
-    def inserisci_prodotto(self,isin, nome,valuta="EUR"):
+    def inserisci_prodotto(self,isin, nome,valuta = "EUR"):
         query = QSqlQuery()
         query.prepare(
-            "INSERT OR IGNORE INTO fondi (isin,nome,valuta) VALUES (?, ?, ?, ?)"
+            "INSERT OR IGNORE INTO fondi (isin,nome,valuta) VALUES (?, ?, ?)"
         )
         query.addBindValue(isin)
         query.addBindValue(nome)
         query.addBindValue(valuta)
 
-        if not query.exec():
+        ok = query.exec()
+        if not ok:
             self.messaggio.emit(f"Errore inserimento: {query.lastError().text()}")
             print("Errore inserimento:", query.lastError().text())
             return None
@@ -91,7 +91,7 @@ class dataBaseSql(QObject):
             print("Table Created successfully")
             q = QSqlQuery()
             q.prepare("SELECT id FROM fondi WHERE isin = ?")
-            q.addBindValue(str(isin))
+            q.addBindValue(isin)
             q.exec()
             if q.next():
                 return q.value(0)
@@ -111,25 +111,24 @@ class dataBaseSql(QObject):
         nuovoIsin = None
         if fid is None:
             nuovoIsin = self.inserisci_prodotto(isin,nome)
-            self.messaggio.emit(f"Inserito Nuovo fondo:{isin}")
+            if nuovoIsin is not None:
+                self.messaggio.emit(f"Inserito Nuovo fondo:{isin}")
+            else:
+                return False
+        else:
+            # print("Errore aggiorna fondi:", q.lastError().text())
+            data = data or datetime.now().isoformat(sep=" ", timespec="seconds")
+            q = QSqlQuery()
+            q.prepare("INSERT OR IGNORE INTO prezzi (fondo_id, data, valore) "
+                      "VALUES (?, ?, ?)")
 
-        if nuovoIsin is None:
-            return False
-
-            print("Errore aggiorna fondi:", q.lastError().text())
-        data = data or datetime.now().isoformat(sep=" ", timespec="seconds")
-        q = QSqlQuery()
-
-        q.prepare("INSERT OR IGNORE INTO prezzi (fondo_id, data, valore) "
-                  "VALUES (?, ?, ?)")
-
-        q.addBindValue(nuovoIsin)
-        q.addBindValue(data)
-        q.addBindValue(valore)
-        if not q.exec():
-            self.messaggio.emit(f"Errore aggiorna prezzo:{q.lastError().text()}")
-            print("Errore aggiorna fondi:", q.lastError().text())
-            return False
+            q.addBindValue(nuovoIsin)
+            q.addBindValue(data)
+            q.addBindValue(valore)
+            if not q.exec():
+                self.messaggio.emit(f"Errore aggiorna prezzo:{q.lastError().text()}")
+                print("Errore aggiorna fondi:", q.lastError().text())
+                return False
 
 
 

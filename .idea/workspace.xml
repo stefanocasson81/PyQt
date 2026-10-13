@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9bda5b79-00bc-488d-baba-8e1f20dcb149" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/GetFoundsQT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/GetFoundsQT.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/isin.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/isin.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dbValori.db" beforeDir="false" afterPath="$PROJECT_DIR$/dbValori.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mainFound.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainFound.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sqlDB.py" beforeDir="false" afterPath="$PROJECT_DIR$/sqlDB.py" afterDir="false" />
     </list>
@@ -45,12 +45,12 @@
     "Python._colorize.executor": "Run",
     "Python.getFunds.executor": "Run",
     "Python.main.executor": "Run",
-    "Python.mainFound.executor": "Run",
+    "Python.mainFound.executor": "Debug",
     "Python.mainFound_2.executor": "Run",
     "Python.mainWindow.executor": "Run",
     "Python.model.executor": "Run",
     "Python.multithread.executor": "Run",
-    "Python.sqlDB.executor": "Run",
+    "Python.sqlDB.executor": "Debug",
     "Python.template.executor": "Run",
     "Python.traceback.executor": "Run",
     "Python.worker.executor": "Debug",
@@ -103,39 +103,19 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/getFunds.py</url>
-          <line>5</line>
-          <option name="timeStamp" value="4" />
+          <url>file://$PROJECT_DIR$/sqlDB.py</url>
+          <line>100</line>
+          <option name="timeStamp" value="132" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/sqlDB.py</url>
-          <line>50</line>
-          <option name="timeStamp" value="108" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>198</line>
-          <option name="timeStamp" value="117" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>65</line>
-          <option name="timeStamp" value="120" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>50</line>
-          <option name="timeStamp" value="121" />
+          <line>109</line>
+          <option name="timeStamp" value="135" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/sqlDB.py</url>
-          <line>33</line>
-          <option name="timeStamp" value="122" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/sqlDB.py</url>
-          <line>22</line>
-          <option name="timeStamp" value="123" />
+          <line>76</line>
+          <option name="timeStamp" value="136" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

@@ -5,6 +5,7 @@
 # )
 from PyQt6.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 import os
+from datetime import datetime
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -44,15 +45,27 @@ class dataBaseSql(QObject):
     def crea_tabella(self):
         """Definisci qui le colonne (voci) del tuo database."""
         query = QSqlQuery()
+        query.exec("PRAGMA foreign_keys = ON")
         ok = query.exec("""
             CREATE TABLE IF NOT EXISTS fondi (
-                id        INTEGER PRIMARY KEY AUTOINCREMENT,
-                id_fondo  TEXT NOT NULL,
-                prezzo    REAL NOT NULL DEFAULT 0.0 CHECK (prezzo >= 0),
-                data      TEXT NOT NULL,
-                UNIQUE (id_fondo, data)
+                id        INTEGER PRIMARY KEY,
+                isin      TEXT NOT NULL UNIQUE,
+                nome      TEXT NOT NULL,
+                valuta    TEXT DEFAULT 'EUR',
                 )
-        """)
+            """)
+        query.exec("""
+            CREATE TABLE IF NOT EXISTS prezzi (
+                fondo_id  INTEGER NOT NULL REFERENCES fondi(id),
+                data      TEXT NOT NULL,
+                valore    REAL NOT NULL,
+                PRIMARY KEY (fondo_id, data)
+                )
+            """)
+        query.exec("""
+            CREATE INDEX IF NOT EXISTS idx_prezzi_data ON prezzi(data)
+            """)
+
         if not ok:
             self.messaggio.emit(f"Errore creazione tabella: {query.lastError().text()}")
             print("Errore creazione tabella:", query.lastError().text())
@@ -60,40 +73,81 @@ class dataBaseSql(QObject):
         else:
             return True
 
-    def aggiornaPrezzo(self, id_fondo, prezzo, data):
-        query = QSqlQuery()
-        query.prepare("UPDATE fondi SET prezzo = ?,data = ? WHERE id = ?")
-        query.addBindValue(prezzo)
-        query.addBindValue(data)
-        query.addBindValue(id_fondo)
-        if not query.exec():
-            self.messaggio.emit(f"Errore aggiunta fondi:{query.lastError().text()}")
-            print("Errore aggiunta fondi:", query.lastError().text())
-            return False
-        if query.numRowsAffected() == 0:
-            self.messaggio.emit(f"Nessun fondo con id : {id_fondo}")
-            print("Nessun fondo con id", id_fondo)
-            return False
-        return True
-
-
-    def inserisci_prodotto(self,id_fondo,prezzo,data):
+    def inserisci_prodotto(self,isin, nome,valuta="EUR"):
         query = QSqlQuery()
         query.prepare(
-            "INSERT INTO fondi (id_fondo, prezzo, data) VALUES (?, ?, ?)"
+            "INSERT OR IGNORE INTO fondi (isin,nome,valuta) VALUES (?, ?, ?, ?)"
         )
-        query.addBindValue(str(id_fondo))
-        query.addBindValue(float(prezzo))
-        query.addBindValue(str(data))
+        query.addBindValue(isin)
+        query.addBindValue(nome)
+        query.addBindValue(valuta)
 
         if not query.exec():
             self.messaggio.emit(f"Errore inserimento: {query.lastError().text()}")
             print("Errore inserimento:", query.lastError().text())
-            return False
+            return None
         else:
             self.messaggio.emit("Table Created successfully")
             print("Table Created successfully")
-        return True
+            q = QSqlQuery()
+            q.prepare("SELECT id FROM fondi WHERE isin = ?")
+            q.addBindValue(str(isin))
+            q.exec()
+            if q.next():
+                return q.value(0)
+            return None
+
+    def trovaFondo(self,i):
+        q = QSqlQuery()
+        q.prepare("SELECT id FROM fondi WHERE isin = ?")
+        q.addBindValue(i)
+        if q.exec() and q.next():
+            return q.value(0)
+        return None
+
+
+    def aggiornaPrezzo(self,isin, nome,valore, data=None):
+        fid = self.trovaFondo(isin)
+        nuovoIsin = None
+        if fid is None:
+            nuovoIsin = self.inserisci_prodotto(isin,nome)
+            self.messaggio.emit(f"Inserito Nuovo fondo:{isin}")
+
+        if nuovoIsin is None:
+            return False
+
+            print("Errore aggiorna fondi:", q.lastError().text())
+        data = data or datetime.now().isoformat(sep=" ", timespec="seconds")
+        q = QSqlQuery()
+
+        q.prepare("INSERT OR IGNORE INTO prezzi (fondo_id, data, valore) "
+                  "VALUES (?, ?, ?)")
+
+        q.addBindValue(nuovoIsin)
+        q.addBindValue(data)
+        q.addBindValue(valore)
+        if not q.exec():
+            self.messaggio.emit(f"Errore aggiorna prezzo:{q.lastError().text()}")
+            print("Errore aggiorna fondi:", q.lastError().text())
+            return False
+
+
+
+    # def aggiornaPrezzo(self, id_fondo, prezzo, data=None):
+    #     query = CREATE INDEX IF NOT EXISTS idx_prezzi_data ON prezzi(data);()
+    #     query.prepare("UPDATE fondi SET prezzo = ?,data = ? WHERE id = ?")
+    #     query.addBindValue(prezzo)
+    #     query.addBindValue(data)
+    #     query.addBindValue(id_fondo)
+    #     if not query.exec():
+    #         self.messaggio.emit(f"Errore aggiunta fondi:{query.lastError().text()}")
+    #         print("Errore aggiunta fondi:", query.lastError().text())
+    #         return False
+    #     if query.numRowsAffected() == 0:
+    #         self.messaggio.emit(f"Nessun fondo con id : {id_fondo}")
+    #         print("Nessun fondo con id", id_fondo)
+    #         return False
+    #     return True
 
 
     def tabella_vuota(self):
@@ -101,76 +155,38 @@ class dataBaseSql(QObject):
         query.next()
         return query.value(0) == 0
 
-
-# class Finestra(QMainWindow):
-#     def __init__(self):
-#         super().__init__()
-#         self.setWindowTitle("Magazzino")
-#         self.resize(650, 400)
-#
-#         # Modello collegato direttamente alla tabella
-#         self.model = QSqlTableModel(self)
-#         self.model.setTable("prodotti")
-#         self.model.setEditStrategy(
-#             QSqlTableModel.EditStrategy.OnFieldChange  # salva ad ogni modifica
-#         )
-#         self.model.select()
-#         for i, titolo in enumerate(["ID", "Nome", "Categoria", "Quantità", "Prezzo"]):
-#             self.model.setHeaderData(i, Qt_Horizontal, titolo)
-#
-#         self.vista = QTableView()
-#         self.vista.setModel(self.model)
-#         self.vista.setColumnHidden(0, True)  # nasconde l'ID
-#         self.vista.resizeColumnsToContents()
-#
-#         btn_aggiungi = QPushButton("Aggiungi riga")
-#         btn_aggiungi.clicked.connect(self.aggiungi_riga)
-#         btn_elimina = QPushButton("Elimina riga selezionata")
-#         btn_elimina.clicked.connect(self.elimina_riga)
-#
-#         bottoni = QHBoxLayout()
-#         bottoni.addWidget(btn_aggiungi)
-#         bottoni.addWidget(btn_elimina)
-#
-#         layout = QVBoxLayout()
-#         layout.addWidget(self.vista)
-#         layout.addLayout(bottoni)
-#         centrale = QWidget()
-#         centrale.setLayout(layout)
-#         self.setCentralWidget(centrale)
-#
-#     def aggiungi_riga(self):
-#         if inserisci_prodotto("Nuovo prodotto", "", 0, 0.0):
-#             self.model.select()
-#
-#     def elimina_riga(self):
-#         indice = self.vista.currentIndex()
-#         if not indice.isValid():
-#             QMessageBox.information(self, "Attenzione", "Seleziona una riga.")
-#             return
-#         self.model.removeRow(indice.row())
-#         self.model.select()
-#
-#
-# from PyQt6.QtCore import Qt
-# Qt_Horizontal = Qt.Orientation.Horizontal
+    def salva_prezzo(fondo_id, valore, data=None):
+        data = data or date.today().isoformat()
+        q = QSqlQuery()
+        q.prepare("INSERT OR IGNORE INTO prezzi (fondo_id, data, valore) "
+                  "VALUES (?, ?, ?)")
+        q.addBindValue(fondo_id)
+        q.addBindValue(data)
+        q.addBindValue(valore)
+        if not q.exec():
+            raise RuntimeError(q.lastError().text())
 
 
-# def main():
-#     app = QApplication(sys.argv)
-#
-#     if apri_database() is None or not crea_tabella():
-#         sys.exit(1)
-#
-#     if tabella_vuota():  # dati di esempio al primo avvio
-#         inserisci_prodotto("Vite M6", "Ferramenta", 500, 0.05)
-#         inserisci_prodotto("Cacciavite", "Utensili", 40, 4.90)
-#         inserisci_prodotto("Guanti da lavoro", "Sicurezza", 25, 3.50)
-#
-#     finestra = Finestra()
-#     finestra.show()
-#     sys.exit(app.exec())
-#
-#
-# if __name__ == "__main__":
-#     main()
+    def ultimi_valori():
+        q = QSqlQuery("""
+            SELECT f.nome, p.data, p.valore
+            FROM fondi f
+            JOIN prezzi p ON p.fondo_id = f.id
+            WHERE p.data = (SELECT MAX(data) FROM prezzi WHERE fondo_id = f.id)
+            ORDER BY f.nome
+        """)
+        righe = []
+        while q.next():
+            righe.append((q.value(0), q.value(1), q.value(2)))
+        return righe
+
+
+    def andamento(fondo_id):
+        q = QSqlQuery()
+        q.prepare("SELECT data, valore FROM prezzi WHERE fondo_id = ? ORDER BY data")
+        q.addBindValue(fondo_id)
+        q.exec()
+        righe = []
+        while q.next():
+            righe.append((q.value(0), q.value(1)))
+        return righe

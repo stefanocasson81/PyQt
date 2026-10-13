@@ -186,8 +186,8 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         for row, fondo in enumerate(data):
             prezzo = self.scarica_dati(fondo["isin"])
             if prezzo is not None:
-                self.dataBase.inserisci_prodotto(fondo["isin"],prezzo,adesso)
-
+                self.dataBase.aggiornaPrezzo(fondo["isin"],fondo["desc"],prezzo)
+                # self.dataBase.inserisci_prodotto(fondo["isin"],fondo["desc"],row)
             totale = len(data)
             if progress_callback:
                 progress=int((row+1)*100/totale)

@@ -61,6 +61,7 @@ class dataBaseSql(QObject):
             """CREATE TABLE IF NOT EXISTS prezzi (
                    fondo_id INTEGER NOT NULL REFERENCES fondi(id),
                    data     TEXT NOT NULL,
+                   ora      TEXT,          
                    valore   REAL NOT NULL,
                    PRIMARY KEY (fondo_id, data))""",
             "CREATE INDEX IF NOT EXISTS idx_prezzi_data ON prezzi(data)",
@@ -115,20 +116,30 @@ class dataBaseSql(QObject):
                 self.messaggio.emit(f"Inserito Nuovo fondo:{isin}")
             else:
                 return False
-        else:
-            # print("Errore aggiorna fondi:", q.lastError().text())
-            data = data or datetime.now().isoformat(sep=" ", timespec="seconds")
-            q = QSqlQuery()
-            q.prepare("INSERT OR IGNORE INTO prezzi (fondo_id, data, valore) "
-                      "VALUES (?, ?, ?)")
 
-            q.addBindValue(nuovoIsin)
-            q.addBindValue(data)
-            q.addBindValue(valore)
-            if not q.exec():
-                self.messaggio.emit(f"Errore aggiorna prezzo:{q.lastError().text()}")
-                print("Errore aggiorna fondi:", q.lastError().text())
-                return False
+        # print("Errore aggiorna fondi:", q.lastError().text())
+        nuovoIsin = isin
+        data = data or datetime.isoformat()
+        ora = datetime.now().isoformat(sep=" ", timespec="seconds")
+        q = QSqlQuery()
+        q.prepare("INSERT OR IGNORE INTO prezzi (fondo_id, data,ora,valore) "
+                      "VALUES (?, ?, ?)"
+                    "ON CONFLICT (fondo_id, data) DO UPDATE SET valore = excluded.valore"
+                  )
+        # q.prepare("UPDATE prezzi SET valore =? WHERE fondo_id =? AND data =?")
+
+        q.addBindValue(nuovoIsin)
+        q.addBindValue(data)
+        q.addBindValue(ora)
+        q.addBindValue(valore)
+
+        if not q.exec():
+            self.messaggio.emit(f"Errore aggiorna prezzo:{q.lastError().text()}")
+            print("Errore aggiorna fondi:", q.lastError().text())
+            return False
+        print(q.numRowsAffected())
+        self.messaggio.emit(f"Aggiornate:{q.numRowsAffected()} righe")
+        return True
 
 
 

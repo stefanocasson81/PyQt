@@ -43,7 +43,7 @@
     "Python._colorize.executor": "Run",
     "Python.getFunds.executor": "Run",
     "Python.main.executor": "Run",
-    "Python.mainFound.executor": "Debug",
+    "Python.mainFound.executor": "Run",
     "Python.mainFound_2.executor": "Run",
     "Python.mainWindow.executor": "Run",
     "Python.model.executor": "Run",
@@ -55,9 +55,12 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
     "git-widget-placeholder": "QSqlDatabase",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "D:/Usr/Software/Python/PyQt",
+    "python.packages.toolwindow.project.migrated.to.right.top.v2": "true",
     "settings.editor.selected.configurable": "preferences.keymap"
   }
 }]]></component>
@@ -72,7 +75,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-116fdca60d1a-968fe969f28a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.28539.90" />
+        <option value="bundled-python-sdk-73a66231627c-5bd6d13a2a75-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-262.10968.92" />
       </set>
     </attachedChunks>
   </component>
@@ -85,6 +88,9 @@
       <updated>1778532993363</updated>
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -102,43 +108,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/sqlDB.py</url>
-          <line>164</line>
+          <line>168</line>
           <option name="timeStamp" value="132" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/sqlDB.py</url>
-          <line>184</line>
+          <line>188</line>
           <option name="timeStamp" value="135" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/worker.py</url>
-          <line>61</line>
-          <option name="timeStamp" value="151" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/sqlDB.py</url>
-          <line>113</line>
-          <option name="timeStamp" value="154" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/sqlDB.py</url>
-          <line>124</line>
-          <option name="timeStamp" value="155" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>195</line>
-          <option name="timeStamp" value="156" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>190</line>
-          <option name="timeStamp" value="157" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mainFound.py</url>
-          <line>182</line>
-          <option name="timeStamp" value="158" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -151,10 +127,7 @@
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="query" />
         <watch expression="q.value(0)" language="Python" />
-        <watch expression="self.db" language="Python" />
-        <watch expression="self.dataBase" language="Python" />
       </configuration>
     </watches-manager>
   </component>

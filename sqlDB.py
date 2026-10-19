@@ -5,6 +5,7 @@
 # )
 from PyQt6.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 import os
+# from datetime import date
 from datetime import datetime
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -91,11 +92,11 @@ class dataBaseSql(QObject):
             self.messaggio.emit("Table Created successfully")
             print("Table Created successfully")
             q = QSqlQuery()
-            q.prepare("SELECT id FROM fondi WHERE isin = ?")
+            q.prepare("SELECT isin FROM fondi WHERE isin = ?")
             q.addBindValue(isin)
             q.exec()
             if q.next():
-                return q.value(0)
+                return q.value(0)#restituisce isin
             return None
 
     def trovaFondo(self,i):
@@ -114,16 +115,19 @@ class dataBaseSql(QObject):
             nuovoIsin = self.inserisci_prodotto(isin,nome)
             if nuovoIsin is not None:
                 self.messaggio.emit(f"Inserito Nuovo fondo:{isin}")
+                print(f"Inserito Nuovo fondo:{isin}")
             else:
                 return False
 
         # print("Errore aggiorna fondi:", q.lastError().text())
         nuovoIsin = isin
-        data = data or datetime.isoformat()
-        ora = datetime.now().isoformat(sep=" ", timespec="seconds")
+        adesso = datetime.now()
+        data = adesso.date().isoformat()
+        ora = adesso.time().isoformat(timespec="seconds")
+        # datetime.time().isoformat()
         q = QSqlQuery()
         q.prepare("INSERT OR IGNORE INTO prezzi (fondo_id, data,ora,valore) "
-                      "VALUES (?, ?, ?)"
+                      "VALUES (?, ?, ?, ?)"
                     "ON CONFLICT (fondo_id, data) DO UPDATE SET valore = excluded.valore"
                   )
         # q.prepare("UPDATE prezzi SET valore =? WHERE fondo_id =? AND data =?")

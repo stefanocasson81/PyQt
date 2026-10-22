@@ -185,3 +185,7 @@ class FondiModel(QAbstractTableModel):
     def azzeraGuadagnoTotale(self):
         self.guadagnoTotale = 0
         self.guadagno.emit(self.guadagnoTotale)
+
+    @property
+    def getNumeroDiFondi(self):
+        return len(self._json_data)

@@ -47,11 +47,12 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.model.addColumn("Guadagno", 0.0)
         self.updateButton.clicked.connect(self.execute)
         self.progressBar.setValue(0)
-        self.dataBase = dataBaseSql("dbValori.db")
+        self.dataBase = dataBaseSql("dbValori.db",self.model.getNumeroDiFondi())
         self.db = self.dataBase.apri_database()
         if self.db and self.db.isOpen():
                 self.model2 = QSqlTableModel(db=self.db)
-                self.model2.setTable("fondi")
+                # self.model2.setTable("fondi")
+                self.model2.setTable("prezzi")
                 if self.model2.select():
                     self.tableView_2.setModel(self.model2)
                 else:

@@ -13,9 +13,10 @@ from PyQt6.QtCore import QObject, pyqtSignal
 class dataBaseSql(QObject):
     messaggio = pyqtSignal(str)
 
-    def __init__(self, fileName):
+    def __init__(self, fileName,numeroDiCampi):
         super().__init__()
         self.nome_file = str(fileName)
+        self.numeroDiFondi = numeroDiCampi
         # self.apri_database()
 
     def apri_database(self):
@@ -72,7 +73,14 @@ class dataBaseSql(QObject):
                 self.messaggio.emit(f"Errore creazione tabella: {query.lastError().text()}")
                 print(f"Errore creazione tabella: {query.lastError().text()}")
                 return False
+
+        for i in self.numeroDiFondi:
+            istruzioni = [
+            """CREATE TABLE IF NOT EXISTS fondi ("""
+
+            }
         return True
+
 
     def inserisci_prodotto(self,isin, nome,valuta = "EUR"):
         query = QSqlQuery()
@@ -169,30 +177,30 @@ class dataBaseSql(QObject):
         query.next()
         return query.value(0) == 0
 
-    def salva_prezzo(fondo_id, valore, data=None):
-        data = data or date.today().isoformat()
-        q = QSqlQuery()
-        q.prepare("INSERT OR IGNORE INTO prezzi (fondo_id, data, valore) "
-                  "VALUES (?, ?, ?)")
-        q.addBindValue(fondo_id)
-        q.addBindValue(data)
-        q.addBindValue(valore)
-        if not q.exec():
-            raise RuntimeError(q.lastError().text())
+    # def salva_prezzo(fondo_id, valore, data=None):
+    #     data = data or date.today().isoformat()
+    #     q = QSqlQuery()
+    #     q.prepare("INSERT OR IGNORE INTO prezzi (fondo_id, data, valore) "
+    #               "VALUES (?, ?, ?)")
+    #     q.addBindValue(fondo_id)
+    #     q.addBindValue(data)
+    #     q.addBindValue(valore)
+    #     if not q.exec():
+    #         raise RuntimeError(q.lastError().text())
 
 
-    def ultimi_valori():
-        q = QSqlQuery("""
-            SELECT f.nome, p.data, p.valore
-            FROM fondi f
-            JOIN prezzi p ON p.fondo_id = f.id
-            WHERE p.data = (SELECT MAX(data) FROM prezzi WHERE fondo_id = f.id)
-            ORDER BY f.nome
-        """)
-        righe = []
-        while q.next():
-            righe.append((q.value(0), q.value(1), q.value(2)))
-        return righe
+    # def ultimi_valori():
+    #     q = QSqlQuery("""
+    #         SELECT f.nome, p.data, p.valore
+    #         FROM fondi f
+    #         JOIN prezzi p ON p.fondo_id = f.id
+    #         WHERE p.data = (SELECT MAX(data) FROM prezzi WHERE fondo_id = f.id)
+    #         ORDER BY f.nome
+    #     """)
+    #     righe = []
+    #     while q.next():
+    #         righe.append((q.value(0), q.value(1), q.value(2)))
+    #     return righe
 
 
     def andamento(fondo_id):

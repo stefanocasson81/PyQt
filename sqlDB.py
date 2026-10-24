@@ -13,10 +13,9 @@ from PyQt6.QtCore import QObject, pyqtSignal
 class dataBaseSql(QObject):
     messaggio = pyqtSignal(str)
 
-    def __init__(self, fileName,numeroDiCampi):
+    def __init__(self, fileName):
         super().__init__()
         self.nome_file = str(fileName)
-        self.numeroDiFondi = numeroDiCampi
         # self.apri_database()
 
     def apri_database(self):
@@ -73,12 +72,6 @@ class dataBaseSql(QObject):
                 self.messaggio.emit(f"Errore creazione tabella: {query.lastError().text()}")
                 print(f"Errore creazione tabella: {query.lastError().text()}")
                 return False
-
-        for i in self.numeroDiFondi:
-            istruzioni = [
-            """CREATE TABLE IF NOT EXISTS fondi ("""
-
-            }
         return True
 
 
@@ -100,7 +93,7 @@ class dataBaseSql(QObject):
             self.messaggio.emit("Table Created successfully")
             print("Table Created successfully")
             q = QSqlQuery()
-            q.prepare("SELECT isin FROM fondi WHERE isin = ?")
+            q.prepare("SELECT id FROM fondi WHERE isin = ?")
             q.addBindValue(isin)
             q.exec()
             if q.next():
@@ -118,36 +111,35 @@ class dataBaseSql(QObject):
 
     def aggiornaPrezzo(self,isin, nome,valore, data=None):
         fid = self.trovaFondo(isin)
-        nuovoIsin = None
         if fid is None:
-            nuovoIsin = self.inserisci_prodotto(isin,nome)
-            if nuovoIsin is not None:
+            fid = self.inserisci_prodotto(isin,nome)
+            if fid is not None:
                 self.messaggio.emit(f"Inserito Nuovo fondo:{isin}")
                 print(f"Inserito Nuovo fondo:{isin}")
             else:
                 return False
 
         # print("Errore aggiorna fondi:", q.lastError().text())
-        nuovoIsin = isin
+        # nuovoIsin = isin
         adesso = datetime.now()
         data = adesso.date().isoformat()
         ora = adesso.time().isoformat(timespec="seconds")
         # datetime.time().isoformat()
         q = QSqlQuery()
-        q.prepare("INSERT OR IGNORE INTO prezzi (fondo_id, data,ora,valore) "
-                      "VALUES (?, ?, ?, ?)"
-                    "ON CONFLICT (fondo_id, data) DO UPDATE SET valore = excluded.valore"
+        q.prepare("INSERT INTO prezzi (fondo_id, data, ora, valore) VALUES (?, ?, ?, ?) "
+                    "ON CONFLICT (fondo_id, data) DO UPDATE SET valore = excluded.valore, ora = excluded.ora"
                   )
         # q.prepare("UPDATE prezzi SET valore =? WHERE fondo_id =? AND data =?")
 
-        q.addBindValue(nuovoIsin)
+        # q.addBindValue(nuovoIsin)
+        q.addBindValue(fid)
         q.addBindValue(data)
         q.addBindValue(ora)
         q.addBindValue(valore)
 
         if not q.exec():
             self.messaggio.emit(f"Errore aggiorna prezzo:{q.lastError().text()}")
-            print("Errore aggiorna fondi:", q.lastError().text())
+            print("Errore aggiorna prezzo:", q.lastError().text())
             return False
         print(q.numRowsAffected())
         self.messaggio.emit(f"Aggiornate:{q.numRowsAffected()} righe")

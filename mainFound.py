@@ -47,7 +47,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.model.addColumn("Guadagno", 0.0)
         self.updateButton.clicked.connect(self.execute)
         self.progressBar.setValue(0)
-        self.dataBase = dataBaseSql("dbValori.db",self.model.getNumeroDiFondi())
+        self.dataBase = dataBaseSql("dbValori.db")
         self.db = self.dataBase.apri_database()
         if self.db and self.db.isOpen():
                 self.model2 = QSqlTableModel(db=self.db)
@@ -188,7 +188,6 @@ class MainWindow(QMainWindow,Ui_MainWindow):
     #     self.label.setText(f"Counter: {self.counter}")
 
     def aggiornaDati(self,data,progress_callback=None,risultato_callback=None):
-        adesso = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         for row, fondo in enumerate(data):
             prezzo = self.scarica_dati(fondo["isin"])
             if prezzo is not None:

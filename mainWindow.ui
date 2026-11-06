@@ -21,10 +21,10 @@
        <item>
         <widget class="QTabWidget" name="tabWidget">
          <property name="focusPolicy">
-          <enum>Qt::FocusPolicy::ClickFocus</enum>
+          <enum>Qt::NoFocus</enum>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="tab">
           <attribute name="title">
@@ -192,6 +192,24 @@
            </property>
           </widget>
          </widget>
+         <widget class="QWidget" name="tab_3">
+          <attribute name="title">
+           <string>Tab 3</string>
+          </attribute>
+          <widget class="QPushButton" name="pushButton">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>730</y>
+             <width>75</width>
+             <height>23</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Show Graph</string>
+           </property>
+          </widget>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -205,7 +223,7 @@
      <x>0</x>
      <y>0</y>
      <width>1301</width>
-     <height>33</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -235,7 +253,8 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="QIcon::ThemeIcon::ApplicationExit"/>
+    <iconset theme="QIcon::ThemeIcon::ApplicationExit">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Exit</string>

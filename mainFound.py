@@ -73,6 +73,8 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         #sqlDB
         self.dataBase.messaggio.connect(lambda v: self.lineEdit_status.setText(str(v)))
 
+
+        self.addButton.
         # worker.updated.connect(self.model.aggiornaRiga,)
         # worker.signals.result.connect(self.print_output)
 

@@ -6,11 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="9bda5b79-00bc-488d-baba-8e1f20dcb149" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/GetFoundsQT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/GetFoundsQT.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dbValori.db" beforeDir="false" afterPath="$PROJECT_DIR$/dbValori.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mainFound.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainFound.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mainWindow.ui" beforeDir="false" afterPath="$PROJECT_DIR$/mainWindow.ui" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sqlDB.py" beforeDir="false" afterPath="$PROJECT_DIR$/sqlDB.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -143,8 +141,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-56aff7b04f6f-JavaScript-PY-263.7307.206" />
-        <option value="bundled-python-sdk-34611be1ca5a-e0583fc556d1-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-263.7307.206" />
+        <option value="bundled-python-sdk-73a66231627c-5bd6d13a2a75-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-262.10968.92" />
       </set>
     </attachedChunks>
   </component>
@@ -195,8 +192,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/sqlDB.py</url>
-          <line>209</line>
-          <option name="timeStamp" value="136" />
+          <line>223</line>
+          <option name="timeStamp" value="137" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -210,6 +207,8 @@
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="q.value(0)" language="Python" />
+        <watch expression="q.value(0)" language="Python" />
+        <watch expression="q.value(1)" language="Python" />
       </configuration>
     </watches-manager>
   </component>

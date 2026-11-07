@@ -243,7 +243,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
 
     def showgraph(self):
-        self.dataBase.cercaValoriFondo()
+        self.dataBase.cercaValoriFondo(1)
 
 
 ##############main windows#####################################################

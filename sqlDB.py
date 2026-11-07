@@ -206,16 +206,20 @@ class dataBaseSql(QObject):
         return righe
 
 
-    def cercaValoriFondo(self):
+    def cercaValoriFondo(self,fondo_id):
         q = QSqlQuery()
-        q.prepare("SELECT fondo_id FROM prezzi WHERE valore = ?")
-        q.addBindValue(valore)  # oppure q.bindValue(0, valore)
+        q.prepare("SELECT data, valore FROM prezzi WHERE fondo_id = ? ORDER BY data")
+        q.addBindValue(fondo_id)  # oppure q.bindValue(0, valore)
 
         if not q.exec():
             print("Errore query:", q.lastError().text())
             return []
 
         righe = []
+        i=0
         while q.next():
-            righe.append(q.value(0))  # colonna 0 = fondo_id
+            righe.append((q.value(0),q.value(1)))  # (data,valore)
+            i +=1
+
+        print("righe lette:", len(righe))
         return righe

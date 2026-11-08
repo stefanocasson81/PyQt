@@ -22,6 +22,22 @@ from PyQt6.QtGui import QImage
 from PyQt6.QtWidgets import QApplication, QTableView, QMainWindow, QVBoxLayout, QWidget, QAbstractItemView, QTableWidget
 from PyQt6.QtCore import QRunnable,QObject, QThreadPool, QTimer, pyqtSlot,pyqtSignal
 from datetime import datetime, date
+import matplotlib
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
+from matplotlib.backends.backend_qtagg import (
+NavigationToolbar2QT as NavigationToolbar,
+)
+from matplotlib.figure import Figure
+
+matplotlib.use("QtAgg")
+
+
+class MplCanvas(FigureCanvasQTAgg):
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111)
+        super().__init__(fig)
+
 
 
 basedir = os.path.dirname(__file__)
@@ -243,7 +259,25 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
 
     def showgraph(self):
-        self.dataBase.cercaValoriFondo(1)
+        sc = MplCanvas
+        fondo = self.dataBase.cercaValoriFondo(1)
+        sc = MplCanvas(self, width=5, height=4, dpi=100)
+        # sc.axes.plot([0, 1, 2, 3, 4], [10, 1, 20, 3, 40])
+
+        for data , valore in fondo:
+            sc.axes.plot(data,valore)
+
+        # toolbar = NavigationToolbar(sc, self)
+        layout = QtWidgets.QVBoxLayout()
+        # layout.addWidget(toolbar)
+        self.tab_3.layout.addWidget(sc)
+        # Create a placeholder widget to hold our toolbar and canvas.
+        widget = QtWidgets.QWidget()
+        widget.setLayout(layout)
+        self.setCentralWidget(widget)
+        self.show()
+
+
 
 
 ##############main windows#####################################################

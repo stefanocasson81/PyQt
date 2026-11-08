@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9bda5b79-00bc-488d-baba-8e1f20dcb149" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/GetFoundsQT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/GetFoundsQT.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dbValori.db" beforeDir="false" afterPath="$PROJECT_DIR$/dbValori.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mainFound.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainFound.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sqlDB.py" beforeDir="false" afterPath="$PROJECT_DIR$/sqlDB.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,7 +102,7 @@
     "Python._colorize.executor": "Run",
     "Python.getFunds.executor": "Run",
     "Python.main.executor": "Run",
-    "Python.mainFound.executor": "Debug",
+    "Python.mainFound.executor": "Run",
     "Python.mainFound_2.executor": "Run",
     "Python.mainWindow.executor": "Run",
     "Python.model.executor": "Run",
@@ -118,7 +116,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "QSqlDatabase",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "D:/Usr/Software/Python/PyQt",
     "node.js.detected.package.eslint": "true",
@@ -189,11 +187,6 @@
           <url>file://$PROJECT_DIR$/sqlDB.py</url>
           <line>192</line>
           <option name="timeStamp" value="135" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/sqlDB.py</url>
-          <line>223</line>
-          <option name="timeStamp" value="137" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

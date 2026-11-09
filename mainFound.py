@@ -259,24 +259,26 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
 
     def showgraph(self):
-        sc = MplCanvas
+        #sc = MplCanvas
         fondo = self.dataBase.cercaValoriFondo(1)
+
+        data  = [riga[0] for riga in fondo]
+        valori = [riga[1] for riga in fondo]
         sc = MplCanvas(self, width=5, height=4, dpi=100)
-        # sc.axes.plot([0, 1, 2, 3, 4], [10, 1, 20, 3, 40])
+        sc.axes.plot(data, valori, marker="o")
+        sc.figure.autofmt_xdate()  # utile se le date sono lunghe
+        # sc.draw()
 
-        for data , valore in fondo:
-            sc.axes.plot(data,valore)
+        layout = self.tab_3.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(self.tab_3)
 
-        # toolbar = NavigationToolbar(sc, self)
-        layout = QtWidgets.QVBoxLayout()
-        # layout.addWidget(toolbar)
-        self.tab_3.layout.addWidget(sc)
-        # Create a placeholder widget to hold our toolbar and canvas.
-        widget = QtWidgets.QWidget()
-        widget.setLayout(layout)
-        self.setCentralWidget(widget)
-        self.show()
+        while layout.count():
+            item = layout.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
 
+        layout.addWidget(sc)
 
 
 

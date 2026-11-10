@@ -90,7 +90,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.dataBase.messaggio.connect(lambda v: self.lineEdit_status.setText(str(v)))
 
 
-        self.showGraph.clicked.connect(self.showgraph)
+        self.showGraphButton.clicked.connect(self.showgraph)
         # worker.updated.connect(self.model.aggiornaRiga,)
         # worker.signals.result.connect(self.print_output)
 

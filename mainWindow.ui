@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1301</width>
-    <height>889</height>
+    <width>2648</width>
+    <height>1260</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,8 +38,8 @@
             <rect>
              <x>0</x>
              <y>20</y>
-             <width>1260</width>
-             <height>400</height>
+             <width>1000</width>
+             <height>461</height>
             </rect>
            </property>
            <property name="minimumSize">
@@ -62,107 +62,6 @@
             <string>Guadagno Totale</string>
            </property>
           </widget>
-          <widget class="QLineEdit" name="lineEdit_isin">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>520</y>
-             <width>250</width>
-             <height>25</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>isin</string>
-           </property>
-          </widget>
-          <widget class="QLineEdit" name="lineEdit_desc">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>550</y>
-             <width>250</width>
-             <height>25</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>desc</string>
-           </property>
-          </widget>
-          <widget class="QLineEdit" name="lineEdit_qta">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>580</y>
-             <width>250</width>
-             <height>25</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>qta</string>
-           </property>
-          </widget>
-          <widget class="QLineEdit" name="lineEdit_inv">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>610</y>
-             <width>250</width>
-             <height>25</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>inv€</string>
-           </property>
-          </widget>
-          <widget class="QPushButton" name="addButton">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>640</y>
-             <width>250</width>
-             <height>25</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Add Todo</string>
-           </property>
-          </widget>
-          <widget class="QPushButton" name="updateButton">
-           <property name="geometry">
-            <rect>
-             <x>280</x>
-             <y>530</y>
-             <width>250</width>
-             <height>25</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Update</string>
-           </property>
-          </widget>
-          <widget class="QProgressBar" name="progressBar">
-           <property name="geometry">
-            <rect>
-             <x>280</x>
-             <y>560</y>
-             <width>250</width>
-             <height>24</height>
-            </rect>
-           </property>
-           <property name="value">
-            <number>24</number>
-           </property>
-          </widget>
-          <widget class="QLineEdit" name="lineEdit_status">
-           <property name="geometry">
-            <rect>
-             <x>280</x>
-             <y>590</y>
-             <width>250</width>
-             <height>25</height>
-            </rect>
-           </property>
-          </widget>
           <widget class="QLabel" name="Guadagno">
            <property name="geometry">
             <rect>
@@ -176,6 +75,163 @@
             <string>0.0</string>
            </property>
           </widget>
+          <widget class="QGroupBox" name="groupBox">
+           <property name="geometry">
+            <rect>
+             <x>1020</x>
+             <y>20</y>
+             <width>261</width>
+             <height>181</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {
+    background-color: #e8f0fe;
+    border: 2px solid #4a7bd0;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 4px;
+    color: #1a3d7c;
+}</string>
+           </property>
+           <property name="title">
+            <string>Aggiungi Isin</string>
+           </property>
+           <widget class="QPushButton" name="addButton">
+            <property name="geometry">
+             <rect>
+              <x>5</x>
+              <y>140</y>
+              <width>250</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Add Todo</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_inv">
+            <property name="geometry">
+             <rect>
+              <x>5</x>
+              <y>110</y>
+              <width>250</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>inv€</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_qta">
+            <property name="geometry">
+             <rect>
+              <x>5</x>
+              <y>80</y>
+              <width>250</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>qta</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_desc">
+            <property name="geometry">
+             <rect>
+              <x>5</x>
+              <y>50</y>
+              <width>250</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>desc</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_isin">
+            <property name="geometry">
+             <rect>
+              <x>5</x>
+              <y>20</y>
+              <width>250</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>isin</string>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QGroupBox" name="groupBox_2">
+           <property name="geometry">
+            <rect>
+             <x>1300</x>
+             <y>20</y>
+             <width>261</width>
+             <height>181</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {
+    background-color: #e8f0fe;
+    border: 2px solid #4a7bd0;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 4px;
+    color: #1a3d7c;
+}</string>
+           </property>
+           <property name="title">
+            <string>Update</string>
+           </property>
+           <widget class="QLineEdit" name="lineEdit_status">
+            <property name="geometry">
+             <rect>
+              <x>5</x>
+              <y>80</y>
+              <width>250</width>
+              <height>25</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="updateButton">
+            <property name="geometry">
+             <rect>
+              <x>5</x>
+              <y>20</y>
+              <width>250</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Update</string>
+            </property>
+           </widget>
+           <widget class="QProgressBar" name="progressBar">
+            <property name="geometry">
+             <rect>
+              <x>5</x>
+              <y>50</y>
+              <width>250</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="value">
+             <number>24</number>
+            </property>
+           </widget>
+          </widget>
          </widget>
          <widget class="QWidget" name="tab_2">
           <attribute name="title">
@@ -186,8 +242,8 @@
             <rect>
              <x>0</x>
              <y>20</y>
-             <width>1260</width>
-             <height>400</height>
+             <width>2641</width>
+             <height>1171</height>
             </rect>
            </property>
           </widget>
@@ -196,11 +252,11 @@
           <attribute name="title">
            <string>Tab 3</string>
           </attribute>
-          <widget class="QPushButton" name="showGraph">
+          <widget class="QPushButton" name="showGraphButton">
            <property name="geometry">
             <rect>
-             <x>10</x>
-             <y>730</y>
+             <x>90</x>
+             <y>750</y>
              <width>75</width>
              <height>23</height>
             </rect>
@@ -222,8 +278,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1301</width>
-     <height>22</height>
+     <width>2648</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -254,7 +310,7 @@
    </property>
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::ApplicationExit">
-     <normaloff>.</normaloff>.</iconset>
+     <normaloff>C:/Users/cassons/.designer/backup</normaloff>C:/Users/cassons/.designer/backup</iconset>
    </property>
    <property name="text">
     <string>Exit</string>

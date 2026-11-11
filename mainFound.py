@@ -259,17 +259,17 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
 
     def showgraph(self):
-        #sc = MplCanvas
         fondo = self.dataBase.cercaValoriFondo(1)
-
         data  = [riga[0] for riga in fondo]
         valori = [riga[1] for riga in fondo]
-        sc = MplCanvas(self, width=5, height=4, dpi=100)
+        sc = MplCanvas(self, width=50, height=40, dpi=100)
         sc.axes.plot(data, valori, marker="o")
         sc.figure.autofmt_xdate()  # utile se le date sono lunghe
         # sc.draw()
-
+        #Create toolbar, passing canvas as first parameter, parent (self, the MainWindow) as second.
+        toolbar = NavigationToolbar(sc, self)
         layout = self.tab_3.layout()
+
         if layout is None:
             layout = QtWidgets.QVBoxLayout(self.tab_3)
 
@@ -279,7 +279,8 @@ class MainWindow(QMainWindow,Ui_MainWindow):
                 item.widget().deleteLater()
 
         layout.addWidget(sc)
-
+        layout.addWidget(toolbar)
+        layout.addWidget(sc)
 
 
 ##############main windows#####################################################

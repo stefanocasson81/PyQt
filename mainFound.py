@@ -77,20 +77,14 @@ class MainWindow(QMainWindow,Ui_MainWindow):
             print("Database non aperto")
 
 
-                # self.setCentralWidget(self.tableView_2)
-
-        # self.dataBase.apri_database()
         self.threadpool = QThreadPool()
         thread_count = self.threadpool.maxThreadCount()
         print(f"Multithreading with maximum {thread_count} threads")
         # self.tableView.setEditTriggers(QAbstractItemView.doubleClicked(index.row))
-
-        #LISTA signals
-        #sqlDB
         self.dataBase.messaggio.connect(lambda v: self.lineEdit_status.setText(str(v)))
-
-
         self.showGraphButton.clicked.connect(self.showgraph)
+        self.currentChanged.connect
+
         # worker.updated.connect(self.model.aggiornaRiga,)
         # worker.signals.result.connect(self.print_output)
 
@@ -282,7 +276,29 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         layout.addWidget(toolbar)
         layout.addWidget(sc)
 
+class MultiCanvasTab(QWidget):
+    def __init__(self, n, parent=None):
+        super().__init__(parent)
+        grid = QGridLayout(self)
 
+        cols = math.ceil(math.sqrt(n))
+        self.canvases = []
+
+        for i in range(n):
+            fig = Figure(constrained_layout=True)
+            canvas = FigureCanvas(fig)
+            ax = fig.add_subplot(111)
+            ax.plot([0, 1, 2], [i, i + 1, i])
+            ax.set_title(f"Grafico {i + 1}")
+
+            grid.addWidget(canvas, i // cols, i % cols)
+            self.canvases.append(canvas)
+
+        # Stessa quota di spazio a tutte le righe/colonne
+        for r in range(math.ceil(n / cols)):
+            grid.setRowStretch(r, 1)
+        for c in range(cols):
+            grid.setColumnStretch(c, 1)
 ##############main windows#####################################################
 
 

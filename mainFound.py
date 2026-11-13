@@ -83,7 +83,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         # self.tableView.setEditTriggers(QAbstractItemView.doubleClicked(index.row))
         self.dataBase.messaggio.connect(lambda v: self.lineEdit_status.setText(str(v)))
         self.showGraphButton.clicked.connect(self.showgraph)
-        self.currentChanged.connect
+        # self.currentChanged.connect
 
         # worker.updated.connect(self.model.aggiornaRiga,)
         # worker.signals.result.connect(self.print_output)
@@ -253,6 +253,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
 
     def showgraph(self):
+        for i in range
         fondo = self.dataBase.cercaValoriFondo(1)
         data  = [riga[0] for riga in fondo]
         valori = [riga[1] for riga in fondo]
@@ -276,29 +277,29 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         layout.addWidget(toolbar)
         layout.addWidget(sc)
 
-class MultiCanvasTab(QWidget):
-    def __init__(self, n, parent=None):
-        super().__init__(parent)
-        grid = QGridLayout(self)
-
-        cols = math.ceil(math.sqrt(n))
-        self.canvases = []
-
-        for i in range(n):
-            fig = Figure(constrained_layout=True)
-            canvas = FigureCanvas(fig)
-            ax = fig.add_subplot(111)
-            ax.plot([0, 1, 2], [i, i + 1, i])
-            ax.set_title(f"Grafico {i + 1}")
-
-            grid.addWidget(canvas, i // cols, i % cols)
-            self.canvases.append(canvas)
-
-        # Stessa quota di spazio a tutte le righe/colonne
-        for r in range(math.ceil(n / cols)):
-            grid.setRowStretch(r, 1)
-        for c in range(cols):
-            grid.setColumnStretch(c, 1)
+# class MultiCanvasTab(QWidget):
+#     def __init__(self, n, parent=None):
+#         super().__init__(parent)
+#         grid = QGridLayout(self)
+#
+#         cols = athm.ceil(math.sqrt(n))
+#         self.canvases = []
+#
+#         for i in range(n):
+#             fig = Figure(constrained_layout=True)
+#             canvas = FigureCanvas(fig)
+#             ax = fig.add_subplot(111)
+#             ax.plot([0, 1, 2], [i, i + 1, i])
+#             ax.set_title(f"Grafico {i + 1}")
+#
+#             grid.addWidget(canvas, i // cols, i % cols)
+#             self.canvases.append(canvas)
+#
+#         # Stessa quota di spazio a tutte le righe/colonne
+#         for r in range(math.ceil(n / cols)):
+#             grid.setRowStretch(r, 1)
+#         for c in range(cols):
+#             grid.setColumnStretch(c, 1)
 ##############main windows#####################################################
 
 

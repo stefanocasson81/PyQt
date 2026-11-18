@@ -19,24 +19,37 @@ from PyQt6 import QtCore,QtWidgets
 from PyQt6.QtCore import Qt,QAbstractTableModel, QModelIndex
 from PyQt6.QtGui import QImage
 # from PyQt6.QtGui import QColor,QAction,QIcon
-from PyQt6.QtWidgets import QApplication, QTableView, QMainWindow, QVBoxLayout, QWidget, QAbstractItemView, QTableWidget
+from PyQt6.QtWidgets import QApplication, QTableView, QMainWindow, QVBoxLayout, QWidget, QAbstractItemView, QTableWidget,QGridLayout, QSizePolicy
 from PyQt6.QtCore import QRunnable,QObject, QThreadPool, QTimer, pyqtSlot,pyqtSignal
 from datetime import datetime, date
 import matplotlib
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 from matplotlib.backends.backend_qtagg import (
-NavigationToolbar2QT as NavigationToolbar,
-)
+NavigationToolbar2QT as NavigationToolbar,)
 from matplotlib.figure import Figure
 
 matplotlib.use("QtAgg")
 
 
+# class MplCanvas(FigureCanvasQTAgg):
+#     def __init__(self, parent=None, width=5, height=4, dpi=100):
+#         fig = Figure(figsize=(width, height), dpi=dpi)
+#         self.axes = fig.add_subplot(111)
+#         super().__init__(fig)
 class MplCanvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
+        fig = Figure(constrained_layout=True)      # adatta margini e titoli
+        canvasGraph= FigureCanvasQTAgg(fig)
+        canvasGraph.setSizePolicy(QSizePolicy.Policy.Expanding,
+                             QSizePolicy.Policy.Expanding)  # si espande con il tab
+        canvasGraph.setMinimumSize(150, 120)  # evita che collassi
+        ax = fig.add_subplot(111)
+        ax.plot([0, 1, 2, 3], [0, 1, 4, 9])
+        ax.set_title("titolo")
+        return canvasGraph
         self.axes = fig.add_subplot(111)
         super().__init__(fig)
+
 
 
 
@@ -83,6 +96,8 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         # self.tableView.setEditTriggers(QAbstractItemView.doubleClicked(index.row))
         self.dataBase.messaggio.connect(lambda v: self.lineEdit_status.setText(str(v)))
         self.showGraphButton.clicked.connect(self.showgraph)
+        self.currentChanged.connect(self.showgraph)
+
         # self.currentChanged.connect
 
         # worker.updated.connect(self.model.aggiornaRiga,)
@@ -252,30 +267,42 @@ class MainWindow(QMainWindow,Ui_MainWindow):
             return None
 
 
-    def showgraph(self):
-        for i in range
-        fondo = self.dataBase.cercaValoriFondo(1)
-        data  = [riga[0] for riga in fondo]
-        valori = [riga[1] for riga in fondo]
-        sc = MplCanvas(self, width=50, height=40, dpi=100)
-        sc.axes.plot(data, valori, marker="o")
-        sc.figure.autofmt_xdate()  # utile se le date sono lunghe
-        # sc.draw()
-        #Create toolbar, passing canvas as first parameter, parent (self, the MainWindow) as second.
-        toolbar = NavigationToolbar(sc, self)
-        layout = self.tab_3.layout()
+    def showgraph(self,index):
+        if self.widget(index) is self.tab3:
+                grid = QGridLayout(self)
+                # grid.addWidget(make_canvas("Grafico 1"), 0, 0)
+                # grid.addWidget(make_canvas("Grafico 2"), 0, 1)
+                # grid.addWidget(make_canvas("Grafico 3"), 1, 0, 1, 2)  # occupa 2 colonne
 
-        if layout is None:
-            layout = QtWidgets.QVBoxLayout(self.tab_3)
+                # Ripartizione equa dello spazio
+                # grid.setRowStretch(0, 1)
+                # grid.setRowStretch(1, 1)
+                # grid.setColumnStretch(0, 1)
+                # grid.setColumnStretch(1, 1)
+            for i in range:
+                fondo = self.dataBase.cercaValoriFondo(i)
+                data  = [riga[0] for riga in fondo]
+                valori = [riga[1] for riga in fondo]
+                grid.addWidget(MplCanvasc("grafico"+i),self.tab_3,i,0)
+                sc = MplCanvas(self, width=50, height=40, dpi=100)
+                sc.axes.plot(data, valori, marker="o")
+                sc.figure.autofmt_xdate()  # utile se le date sono lunghe
+                # sc.draw()
+                #Create toolbar, passing canvas as first parameter, parent (self, the MainWindow) as second.
+                toolbar = NavigationToolbar(sc, self)
+                layout = self.tab_3.layout()
 
-        while layout.count():
-            item = layout.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
+                if layout is None:
+                    layout = QtWidgets.QVBoxLayout(self.tab_3)
 
-        layout.addWidget(sc)
-        layout.addWidget(toolbar)
-        layout.addWidget(sc)
+                while layout.count():
+                    item = layout.takeAt(0)
+                    if item.widget():
+                        item.widget().deleteLater()
+
+                layout.addWidget(sc)
+                layout.addWidget(toolbar)
+                layout.addWidget(sc)
 
 # class MultiCanvasTab(QWidget):
 #     def __init__(self, n, parent=None):

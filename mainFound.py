@@ -96,7 +96,8 @@ class MainWindow(QMainWindow,QTabWidget,Ui_MainWindow):
         # self.tableView.setEditTriggers(QAbstractItemView.doubleClicked(index.row))
         self.dataBase.messaggio.connect(lambda v: self.lineEdit_status.setText(str(v)))
         # self.showGraphButton.clicked.connect(self.showgraph)
-        self.currentChanged.connect(self.showgraph)
+
+        self.tabWidget.currentChanged.connect(self.showgraph)
 
         # self.currentChanged.connect
 
@@ -268,7 +269,8 @@ class MainWindow(QMainWindow,QTabWidget,Ui_MainWindow):
 
 
     def showgraph(self,index):
-        if self.widget(index) is self.tab_3:
+
+        if self.tabWidget.widget(index) is self.tab_3:
             grid = QGridLayout(self)
                 # grid.addWidget(make_canvas("Grafico 1"), 0, 0)
                 # grid.addWidget(make_canvas("Grafico 2"), 0, 1)
@@ -279,7 +281,7 @@ class MainWindow(QMainWindow,QTabWidget,Ui_MainWindow):
                 # grid.setRowStretch(1, 1)
                 # grid.setColumnStretch(0, 1)
                 # grid.setColumnStretch(1, 1)
-        for i in range:
+        for i in range(self.model.getNumeroDiFondi):
             fondo = self.dataBase.cercaValoriFondo(i)
             data  = [riga[0] for riga in fondo]
             valori = [riga[1] for riga in fondo]

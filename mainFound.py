@@ -281,30 +281,30 @@ class MainWindow(QMainWindow,QTabWidget,Ui_MainWindow):
                 # grid.setRowStretch(1, 1)
                 # grid.setColumnStretch(0, 1)
                 # grid.setColumnStretch(1, 1)
-        for i in range(self.model.getNumeroDiFondi):
-            fondo = self.dataBase.cercaValoriFondo(i)
-            data  = [riga[0] for riga in fondo]
-            valori = [riga[1] for riga in fondo]
-            grid.addWidget(MplCanvasc("grafico"+i),self.tab_3,i,0)
-            sc = MplCanvas(self, width=50, height=40, dpi=100)
-            sc.axes.plot(data, valori, marker="o")
-            sc.figure.autofmt_xdate()  # utile se le date sono lunghe
-            # sc.draw()
-            #Create toolbar, passing canvas as first parameter, parent (self, the MainWindow) as second.
-            toolbar = NavigationToolbar(sc, self)
-            layout = self.tab_3.layout()
+            for i in range(self.model.getNumeroDiFondi):
+                fondo = self.dataBase.cercaValoriFondo(i)
+                data  = [riga[0] for riga in fondo]
+                valori = [riga[1] for riga in fondo]
+                grid.addWidget(MplCanvasc("grafico"+i),self.tab_3,i,0)
+                sc = MplCanvas(self, width=50, height=40, dpi=100)
+                sc.axes.plot(data, valori, marker="o")
+                sc.figure.autofmt_xdate()  # utile se le date sono lunghe
+                # sc.draw()
+                #Create toolbar, passing canvas as first parameter, parent (self, the MainWindow) as second.
+                toolbar = NavigationToolbar(sc, self)
+                layout = self.tab_3.layout()
 
-            if layout is None:
-                layout = QtWidgets.QVBoxLayout(self.tab_3)
+                if layout is None:
+                    layout = QtWidgets.QVBoxLayout(self.tab_3)
 
-            while layout.count():
-                item = layout.takeAt(0)
-                if item.widget():
-                    item.widget().deleteLater()
+                while layout.count():
+                    item = layout.takeAt(0)
+                    if item.widget():
+                        item.widget().deleteLater()
 
-            layout.addWidget(sc)
-            layout.addWidget(toolbar)
-            layout.addWidget(sc)
+                layout.addWidget(sc)
+                layout.addWidget(toolbar)
+                layout.addWidget(sc)
 
 # class MultiCanvasTab(QWidget):
 #     def __init__(self, n, parent=None):

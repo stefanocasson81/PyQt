@@ -5,6 +5,9 @@ from email.policy import default
 import bs4
 import requests
 import sys
+
+from fontTools.ttLib.tables.T_S_I__3 import table_T_S_I__3
+
 from model import FondiModel
 from worker import *
 
@@ -38,17 +41,14 @@ matplotlib.use("QtAgg")
 #         super().__init__(fig)
 class MplCanvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
-        fig = Figure(constrained_layout=True)      # adatta margini e titoli
-        canvasGraph= FigureCanvasQTAgg(fig)
-        canvasGraph.setSizePolicy(QSizePolicy.Policy.Expanding,
-                             QSizePolicy.Policy.Expanding)  # si espande con il tab
-        canvasGraph.setMinimumSize(150, 120)  # evita che collassi
-        ax = fig.add_subplot(111)
-        ax.plot([0, 1, 2, 3], [0, 1, 4, 9])
-        ax.set_title("titolo")
-        return canvasGraph
-        self.axes = fig.add_subplot(111)
+        fig = Figure(figsize=(width, height), dpi=dpi,constrained_layout=True)      # adatta margini e titoli
         super().__init__(fig)
+        # self.setParent(parent)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding,
+                             QSizePolicy.Policy.Expanding)  # si espande con il tab
+        self.setMinimumSize(150, 120)  # evita che collassi
+        self.ax = fig.add_subplot(111)
+        self.ax.set_title("Fondo")
 
 
 
@@ -269,42 +269,38 @@ class MainWindow(QMainWindow,QTabWidget,Ui_MainWindow):
 
 
     def showgraph(self,index):
+        N_COLS = 2
+        if self.tabWidget.widget(index) is not self.tab_3:
+            return
+        grid = self.tab_3.layout()
+        if not isinstance(grid, QtWidgets.QGridLayout):
+            if grid is not None:
+               QtWidgets.QWidget().setLayout(grid)
+            grid = QtWidgets.QGridLayout(self.tab_3)
 
-        if self.tabWidget.widget(index) is self.tab_3:
-            grid = QGridLayout(self)
-                # grid.addWidget(make_canvas("Grafico 1"), 0, 0)
-                # grid.addWidget(make_canvas("Grafico 2"), 0, 1)
-                # grid.addWidget(make_canvas("Grafico 3"), 1, 0, 1, 2)  # occupa 2 colonne
+        while grid.count():
+            item = grid.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
 
-                # Ripartizione equa dello spazio
-                # grid.setRowStretch(0, 1)
-                # grid.setRowStretch(1, 1)
-                # grid.setColumnStretch(0, 1)
-                # grid.setColumnStretch(1, 1)
-            for i in range(self.model.getNumeroDiFondi):
-                fondo = self.dataBase.cercaValoriFondo(i)
-                data  = [riga[0] for riga in fondo]
-                valori = [riga[1] for riga in fondo]
-                grid.addWidget(MplCanvasc("grafico"+i),self.tab_3,i,0)
-                sc = MplCanvas(self, width=50, height=40, dpi=100)
-                sc.axes.plot(data, valori, marker="o")
-                sc.figure.autofmt_xdate()  # utile se le date sono lunghe
-                # sc.draw()
-                #Create toolbar, passing canvas as first parameter, parent (self, the MainWindow) as second.
-                toolbar = NavigationToolbar(sc, self)
-                layout = self.tab_3.layout()
+        for i in range(self.model.getNumeroDiFondi):
+            sc = MplCanvas(width=5, height=4, dpi=100)
+            fondo = self.dataBase.cercaValoriFondo(i+1)
+            data  = [riga[0] for riga in fondo]
+            valori = [riga[1] for riga in fondo]
+            sc.ax.plot(data, valori, marker="o")
+            sc.ax.set_title(f"Fondo {i + 1}")
+            sc.figure.autofmt_xdate()  # utile se le date sono lunghe
+            sc.draw()
 
-                if layout is None:
-                    layout = QtWidgets.QVBoxLayout(self.tab_3)
+            box = QtWidgets.QWidget()
+            box_layout = QtWidgets.QVBoxLayout(box)
+            box_layout.addWidget(NavigationToolbar(sc, self))
+            box_layout.addWidget(sc)
+            row, col = divmod(i, N_COLS)
+            grid.addWidget(box, row, col)
 
-                while layout.count():
-                    item = layout.takeAt(0)
-                    if item.widget():
-                        item.widget().deleteLater()
 
-                layout.addWidget(sc)
-                layout.addWidget(toolbar)
-                layout.addWidget(sc)
 
 # class MultiCanvasTab(QWidget):
 #     def __init__(self, n, parent=None):

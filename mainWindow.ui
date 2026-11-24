@@ -39,7 +39,7 @@
           </size>
          </property>
          <property name="focusPolicy">
-          <enum>Qt::FocusPolicy::NoFocus</enum>
+          <enum>Qt::NoFocus</enum>
          </property>
          <property name="currentIndex">
           <number>2</number>
@@ -297,6 +297,17 @@ QGroupBox::title {
           <attribute name="title">
            <string>Tab 3</string>
           </attribute>
+          <widget class="QWidget" name="gridLayoutWidget">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>2</width>
+             <height>2</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="gridLayout"/>
+          </widget>
          </widget>
         </widget>
        </item>
@@ -311,7 +322,7 @@ QGroupBox::title {
      <x>0</x>
      <y>0</y>
      <width>1138</width>
-     <height>33</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -342,7 +353,7 @@ QGroupBox::title {
    </property>
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::ApplicationExit">
-     <normaloff>../../../../../cassons/.designer/backup</normaloff>../../../../../cassons/.designer/backup</iconset>
+     <normaloff>../../../../cassons/.designer/backup</normaloff>../../../../cassons/.designer/backup</iconset>
    </property>
    <property name="text">
     <string>Exit</string>

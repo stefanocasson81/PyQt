@@ -55,9 +55,9 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>190</y>
+             <y>220</y>
              <width>1091</width>
-             <height>711</height>
+             <height>681</height>
             </rect>
            </property>
            <property name="minimumSize">
@@ -80,9 +80,9 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>9</y>
+             <y>0</y>
              <width>1091</width>
-             <height>181</height>
+             <height>221</height>
             </rect>
            </property>
            <property name="styleSheet">
@@ -91,15 +91,17 @@ border-color: rgb(0, 0, 0);</string>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
-             <widget class="QGroupBox" name="groupBox_2">
-              <property name="maximumSize">
-               <size>
-                <width>260</width>
-                <height>180</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QGroupBox {
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QGroupBox" name="groupBox_2">
+                <property name="maximumSize">
+                 <size>
+                  <width>260</width>
+                  <height>180</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QGroupBox {
     background-color: #e8f0fe;
     border: 2px solid #4a7bd0;
     border-radius: 6px;
@@ -112,87 +114,91 @@ QGroupBox::title {
     padding: 0 4px;
     color: #1a3d7c;
 }</string>
-              </property>
-              <property name="title">
-               <string>Update</string>
-              </property>
-              <widget class="QLineEdit" name="lineEdit_status">
-               <property name="geometry">
-                <rect>
-                 <x>5</x>
-                 <y>80</y>
-                 <width>250</width>
-                 <height>25</height>
-                </rect>
-               </property>
-              </widget>
-              <widget class="QPushButton" name="updateButton">
-               <property name="geometry">
-                <rect>
-                 <x>5</x>
-                 <y>20</y>
-                 <width>250</width>
-                 <height>25</height>
-                </rect>
-               </property>
-               <property name="text">
-                <string>Update</string>
-               </property>
-              </widget>
-              <widget class="QProgressBar" name="progressBar">
-               <property name="geometry">
-                <rect>
-                 <x>5</x>
-                 <y>50</y>
-                 <width>250</width>
-                 <height>25</height>
-                </rect>
-               </property>
-               <property name="value">
-                <number>24</number>
-               </property>
-              </widget>
-              <widget class="QLabel" name="Guadagno">
-               <property name="geometry">
-                <rect>
-                 <x>10</x>
-                 <y>130</y>
-                 <width>91</width>
-                 <height>16</height>
-                </rect>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background-color: rgb(200,200,200);</string>
-               </property>
-               <property name="text">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;0.0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-              </widget>
-              <widget class="QLabel" name="label">
-               <property name="geometry">
-                <rect>
-                 <x>110</x>
-                 <y>130</y>
-                 <width>121</width>
-                 <height>16</height>
-                </rect>
-               </property>
-               <property name="text">
-                <string>Guadagno Totale €</string>
-               </property>
-              </widget>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="groupBox">
-              <property name="maximumSize">
-               <size>
-                <width>260</width>
-                <height>180</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QGroupBox {
+                </property>
+                <property name="title">
+                 <string>Update</string>
+                </property>
+                <widget class="QLineEdit" name="lineEdit_status">
+                 <property name="geometry">
+                  <rect>
+                   <x>5</x>
+                   <y>90</y>
+                   <width>250</width>
+                   <height>25</height>
+                  </rect>
+                 </property>
+                </widget>
+                <widget class="QPushButton" name="updateButton">
+                 <property name="geometry">
+                  <rect>
+                   <x>5</x>
+                   <y>30</y>
+                   <width>250</width>
+                   <height>25</height>
+                  </rect>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(255, 255, 255);
+border-color: rgb(0, 0, 0);</string>
+                 </property>
+                 <property name="text">
+                  <string>Update</string>
+                 </property>
+                </widget>
+                <widget class="QProgressBar" name="progressBar">
+                 <property name="geometry">
+                  <rect>
+                   <x>5</x>
+                   <y>60</y>
+                   <width>250</width>
+                   <height>25</height>
+                  </rect>
+                 </property>
+                 <property name="value">
+                  <number>24</number>
+                 </property>
+                </widget>
+                <widget class="QLabel" name="Guadagno">
+                 <property name="geometry">
+                  <rect>
+                   <x>10</x>
+                   <y>130</y>
+                   <width>91</width>
+                   <height>16</height>
+                  </rect>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(200,200,200);</string>
+                 </property>
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;0.0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                </widget>
+                <widget class="QLabel" name="label">
+                 <property name="geometry">
+                  <rect>
+                   <x>110</x>
+                   <y>130</y>
+                   <width>121</width>
+                   <height>16</height>
+                  </rect>
+                 </property>
+                 <property name="text">
+                  <string>Guadagno Totale €</string>
+                 </property>
+                </widget>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox">
+                <property name="maximumSize">
+                 <size>
+                  <width>260</width>
+                  <height>180</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QGroupBox {
     background-color: #e8f0fe;
     border: 2px solid #4a7bd0;
     border-radius: 6px;
@@ -205,76 +211,82 @@ QGroupBox::title {
     padding: 0 4px;
     color: #1a3d7c;
 }</string>
-              </property>
-              <property name="title">
-               <string>Aggiungi Isin</string>
-              </property>
-              <widget class="QPushButton" name="addButton">
-               <property name="geometry">
-                <rect>
-                 <x>5</x>
-                 <y>140</y>
-                 <width>250</width>
-                 <height>25</height>
-                </rect>
-               </property>
-               <property name="text">
-                <string>Add Todo</string>
-               </property>
-              </widget>
-              <widget class="QLineEdit" name="lineEdit_inv">
-               <property name="geometry">
-                <rect>
-                 <x>5</x>
-                 <y>110</y>
-                 <width>250</width>
-                 <height>25</height>
-                </rect>
-               </property>
-               <property name="text">
-                <string>inv€</string>
-               </property>
-              </widget>
-              <widget class="QLineEdit" name="lineEdit_qta">
-               <property name="geometry">
-                <rect>
-                 <x>5</x>
-                 <y>80</y>
-                 <width>250</width>
-                 <height>25</height>
-                </rect>
-               </property>
-               <property name="text">
-                <string>qta</string>
-               </property>
-              </widget>
-              <widget class="QLineEdit" name="lineEdit_desc">
-               <property name="geometry">
-                <rect>
-                 <x>5</x>
-                 <y>50</y>
-                 <width>250</width>
-                 <height>25</height>
-                </rect>
-               </property>
-               <property name="text">
-                <string>desc</string>
-               </property>
-              </widget>
-              <widget class="QLineEdit" name="lineEdit_isin">
-               <property name="geometry">
-                <rect>
-                 <x>5</x>
-                 <y>20</y>
-                 <width>250</width>
-                 <height>25</height>
-                </rect>
-               </property>
-               <property name="text">
-                <string>isin</string>
-               </property>
-              </widget>
-             </widget>
+                </property>
+                <property name="title">
+                 <string>Aggiungi Isin</string>
+                </property>
+                <widget class="QPushButton" name="addButton">
+                 <property name="geometry">
+                  <rect>
+                   <x>5</x>
+                   <y>30</y>
+                   <width>250</width>
+                   <height>25</height>
+                  </rect>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(255, 255, 255);
+border-color: rgb(0, 0, 0);</string>
+                 </property>
+                 <property name="text">
+                  <string>Add Todo</string>
+                 </property>
+                </widget>
+                <widget class="QLineEdit" name="lineEdit_inv">
+                 <property name="geometry">
+                  <rect>
+                   <x>5</x>
+                   <y>150</y>
+                   <width>250</width>
+                   <height>25</height>
+                  </rect>
+                 </property>
+                 <property name="text">
+                  <string>inv€</string>
+                 </property>
+                </widget>
+                <widget class="QLineEdit" name="lineEdit_qta">
+                 <property name="geometry">
+                  <rect>
+                   <x>5</x>
+                   <y>120</y>
+                   <width>250</width>
+                   <height>25</height>
+                  </rect>
+                 </property>
+                 <property name="text">
+                  <string>qta</string>
+                 </property>
+                </widget>
+                <widget class="QLineEdit" name="lineEdit_desc">
+                 <property name="geometry">
+                  <rect>
+                   <x>5</x>
+                   <y>90</y>
+                   <width>250</width>
+                   <height>25</height>
+                  </rect>
+                 </property>
+                 <property name="text">
+                  <string>desc</string>
+                 </property>
+                </widget>
+                <widget class="QLineEdit" name="lineEdit_isin">
+                 <property name="geometry">
+                  <rect>
+                   <x>5</x>
+                   <y>60</y>
+                   <width>250</width>
+                   <height>25</height>
+                  </rect>
+                 </property>
+                 <property name="text">
+                  <string>isin</string>
+                 </property>
+                </widget>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </widget>
@@ -332,7 +344,7 @@ QGroupBox::title {
      <x>0</x>
      <y>0</y>
      <width>1138</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

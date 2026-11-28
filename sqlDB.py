@@ -218,7 +218,7 @@ class dataBaseSql(QObject):
         righe = []
         i=0
         while q.next():
-            righe.append((q.value(0),q.value(1)))  # (data,valore)
+            righ4e.append((q.value(0),q.value(1)))  # (data,valore)
             i +=1
 
         print("righe lette:", len(righe))
